@@ -1,0 +1,31 @@
+{
+  "name": "cerealbot",
+  "version": "0.0.1",
+  "description": "Cereal Bot for extreme Cereal Content",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CerealDevelopment/CerealBot.git"
+  },
+  "keywords": [
+    "Cereal",
+    "Bot",
+    "Discord"
+  ],
+  "author": "Cereal Development",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/CerealDevelopment/CerealBot/issues"
+  },
+  "homepage": "https://github.com/CerealDevelopment/CerealBot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  },
+  "devDependencies": {
+    "prettier": "2.2.1"
+  }
+}
