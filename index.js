@@ -3,15 +3,29 @@ const { write } = require("fs");
 const config = require("./config.json");
 
 const client = new Discord.Client();
-
-const prefix = "/";
+const prefix = config.PREFIX;
 
 // client.on("typingStart", typingStart => {
 //    console.log("typing");
 //    console.dir(typingStart);
 // });
 
-client.on("message", function (message) {
+const ping = (message) => {
+  const timeTaken = Date.now() - message.createdTimestamp;
+  message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+}
+
+const sum = (args, message) => {
+  const numArgs = args.map((x) => parseFloat(x));
+  const sum = numArgs.reduce((counter, x) => (counter += x));
+  message.reply(`The sum of all the arguments you provided is ${sum}!`);
+}
+
+const cereal = (message) => {
+  message.reply("Some Cereal stuff happening soon! (╯°□°）╯︵ ┻━┻");
+}
+
+client.on("message", (message) => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -21,16 +35,13 @@ client.on("message", function (message) {
 
   switch (command) {
     case "ping":
-      const timeTaken = Date.now() - message.createdTimestamp;
-      message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+      ping(message);
       break;
     case "sum":
-      const numArgs = args.map((x) => parseFloat(x));
-      const sum = numArgs.reduce((counter, x) => (counter += x));
-      message.reply(`The sum of all the arguments you provided is ${sum}!`);
+      sum(args, message)
       break;
     case "cereal":
-      message.reply("Some Cereal stuff happening soon! (╯°□°）╯︵ ┻━┻");
+      cereal(message)
       break;
     default:
   }
