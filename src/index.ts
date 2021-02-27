@@ -1,20 +1,20 @@
 import { Client } from "discord.js";
 import config from "../config.json";
-import utils from "./messages/utils.js";
+import utils from "./messages/utils";
 
-const client = new Client();
-const prefix = config.PREFIX;
+const client: Client = new Client();
+const prefix: string = config.PREFIX;
 
 // client.on("typingStart", typingStart => {
 //    console.log("typing");
 //    console.dir(typingStart);
 // });
 
-client.once('ready', () => {
-	console.log('Time to get cereal!');
+client.once("ready", () => {
+  console.log("Time to get cereal!");
 });
 
-client.on("message", (message) => {
+client.on("message", (message: any) => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -27,10 +27,11 @@ client.on("message", (message) => {
       utils.ping(message);
       break;
     case "sum":
-      utils.sum(args, message)
+      const result = utils.sum(args);
+      utils.messageReply("The sum of all the arguments you provided is ${result}!", message);
       break;
     case "cereal":
-      utils.cereal(message)
+      utils.cereal(message);
       break;
     default:
   }
