@@ -1,0 +1,4 @@
+node_modules/
+.github/
+tests/
+config.json
