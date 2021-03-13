@@ -1,6 +1,6 @@
 import { MessageAttachment, MessageEmbed } from 'discord.js'
 
-const attachments: Array<MessageAttachment> = [new MessageAttachment('./static/zerotwo.png', 'zerotwo.png')]
+const attachments: Array<MessageAttachment> = [new MessageAttachment('./resources/memes/zerotwo.png', 'zerotwo.png')]
 const zeroTwoEmbed = new MessageEmbed()
 
 zeroTwoEmbed

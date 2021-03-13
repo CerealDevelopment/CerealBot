@@ -2,7 +2,7 @@ import { Message } from 'discord.js'
 
 module.exports = {
     name: 'ping',
-    desciption: 'pong',
+    description: 'pong',
     args: false,
     usage: '',
     execute(message: Message) {

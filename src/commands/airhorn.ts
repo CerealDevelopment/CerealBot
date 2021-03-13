@@ -26,6 +26,13 @@ async function airhorn(message: Message) {
       }
 }
 
-export default {
-    airhorn
+
+module.exports = {
+    name: 'airhorn',
+    description: 'Make some noise!',
+    args: false,
+    usage: '',
+    execute(message: Message) {
+        airhorn(message);
+    }
 }

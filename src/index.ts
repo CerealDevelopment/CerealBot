@@ -11,7 +11,7 @@ client.login(config.BOT_TOKEN);
 
 export interface CommandInterface {
     name: string;
-    desciption: string;
+    description: string;
     args: boolean;
     usage: string;
     execute(message: Message, args?: Array<string>);
