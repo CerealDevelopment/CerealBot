@@ -11,7 +11,7 @@ zeroTwoEmbed
 module.exports = {
 	name: 'meme',
 	args: false,
-    usage: '',
+	usage: '',
 	description: '',
 	execute(message) {
 		message.channel.send(zeroTwoEmbed)
