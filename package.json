@@ -7,7 +7,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "babel src -d lib --extensions '.ts'",
     "start": "node --experimental-json-modules ./lib/index.js",
-    "pretty": "npx prettier --write",
+    "pretty": "npx prettier --write ./src",
     "clean": "rm -rf node_modules",
     "clean-install": "npm run-script clean && npm install"
   },
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/CerealDevelopment/CerealBot#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.4.0",
     "discord.js": "^12.5.1",
     "require": "^2.4.20"
   },
