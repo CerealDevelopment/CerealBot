@@ -4,8 +4,8 @@ import fs from "fs";
 
 const client: Client = new Client();
 const prefix: string = config.PREFIX;
-let commands: Collection<string, CommandInterface> = new Collection();
-let commandFiles: Array<string> = fs
+const commands: Collection<string, CommandInterface> = new Collection();
+const commandFiles: Array<string> = fs
   .readdirSync("lib/commands")
   .filter((file) => file.endsWith(".js"));
 
@@ -39,7 +39,7 @@ client.on("message", (message: any) => {
   try {
     const executable: CommandInterface = commands.get(command);
     if (executable.args && !args.length) {
-      let reply = `You didn't provide any arguments, ${message.author}!`;
+      const reply = `You didn't provide any arguments, ${message.author}!`;
       if (executable.usage) {
         reply += `\nThe proper usage would be: \`${prefix}${executable.name} ${executable.usage}\``;
       }
