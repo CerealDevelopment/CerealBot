@@ -1,38 +1,39 @@
 import fs from "fs";
 import { Message } from "discord.js";
 
-
 async function airhorn(message: Message) {
-    if (message.member.voice.channel) {
-        const connection = await message.member.voice.channel.join();
-                
-        // Create a dispatcher
-        const dispatcher = connection.play(fs.createReadStream('./resources/sounds/airhorn_default.wav'), {type: 'unknown'});
+  if (message.member.voice.channel) {
+    const connection = await message.member.voice.channel.join();
 
-        dispatcher.setVolume(1);
+    // Create a dispatcher
+    const dispatcher = connection.play(
+      fs.createReadStream("./resources/sounds/airhorn_default.wav"),
+      { type: "unknown" }
+    );
 
-        dispatcher.on('start', () => {
-          console.log('airhorn_default.wav is now playing!');
-        });
+    dispatcher.setVolume(1);
 
-        dispatcher.on('finish', () => {
-          console.log('airhorn_default.wav has finished playing!');
-          dispatcher.destroy();
-          connection.disconnect();
-        });
+    dispatcher.on("start", () => {
+      console.log("airhorn_default.wav is now playing!");
+    });
 
-        // Always remember to handle errors appropriately!
-        dispatcher.on('error', console.error);
-      }
+    dispatcher.on("finish", () => {
+      console.log("airhorn_default.wav has finished playing!");
+      dispatcher.destroy();
+      connection.disconnect();
+    });
+
+    // Always remember to handle errors appropriately!
+    dispatcher.on("error", console.error);
+  }
 }
-
 
 module.exports = {
-    name: 'airhorn',
-    description: 'Make some noise!',
-    args: false,
-    usage: '',
-    execute(message: Message) {
-        airhorn(message);
-    }
-}
+  name: "airhorn",
+  description: "Make some noise!",
+  args: false,
+  usage: "",
+  execute(message: Message) {
+    airhorn(message);
+  },
+};
