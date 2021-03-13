@@ -1,6 +1,6 @@
 import { Client, Collection, Message } from "discord.js";
 import config from "../config.json";
-import fs from 'fs';
+import fs from "fs";
 
 const client: Client = new Client();
 const prefix: string = config.PREFIX;
