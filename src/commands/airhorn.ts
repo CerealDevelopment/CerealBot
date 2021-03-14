@@ -1,17 +1,17 @@
 import fs from "fs";
-import { Message } from "discord.js";
+import { Message, VoiceConnection } from "discord.js";
 
 async function airhorn(message: Message) {
   if (message.member.voice.channel) {
-    const connection = await message.member.voice.channel.join();
+    const audioFile: fs.ReadStream = fs.createReadStream(
+      "./resources/sounds/airhorn_default.wav"
+    );
+    const connection: VoiceConnection = await message.member.voice.channel.join();
 
     // Create a dispatcher
-    const dispatcher = connection.play(
-      fs.createReadStream("./resources/sounds/airhorn_default.wav"),
-      { type: "unknown" }
-    );
+    const dispatcher = connection.play(audioFile, { type: "unknown" });
 
-    dispatcher.setVolume(1);
+    dispatcher.setVolume(0.5);
 
     dispatcher.on("start", () => {
       console.log("airhorn_default.wav is now playing!");
