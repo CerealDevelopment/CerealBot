@@ -28,7 +28,7 @@ client.once("ready", () => {
   console.log("Time to get cereal!");
 });
 
-client.on("message", (message: any) => {
+client.on("message", (message: Message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return;
   }
@@ -39,7 +39,7 @@ client.on("message", (message: any) => {
   try {
     const executable: CommandInterface = commands.get(command);
     if (executable.args && !args.length) {
-      const reply = `You didn't provide any arguments, ${message.author}!`;
+      let reply = `You didn't provide any arguments, ${message.author}!`;
       if (executable.usage) {
         reply += `\nThe proper usage would be: \`${prefix}${executable.name} ${executable.usage}\``;
       }

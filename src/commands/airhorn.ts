@@ -30,7 +30,7 @@ async function airhorn(message: Message) {
 
 module.exports = {
   name: "airhorn",
-  description: "Make some noise!",
+  description: "BEEEP!",
   args: false,
   usage: "",
   execute(message: Message) {

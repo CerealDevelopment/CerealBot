@@ -3,7 +3,7 @@ import { MessageAttachment, MessageEmbed } from "discord.js";
 const attachments: Array<MessageAttachment> = [
   new MessageAttachment("./resources/memes/zerotwo.png", "zerotwo.png"),
 ];
-const zeroTwoEmbed = new MessageEmbed();
+const zeroTwoEmbed: MessageEmbed = new MessageEmbed();
 
 zeroTwoEmbed
   .setTitle(":P")
