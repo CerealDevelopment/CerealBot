@@ -33,3 +33,15 @@ Current required items in config.json:
 **RUN**
 
 `docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json cereal_bot:latest` 
+
+## Used resources 
+
+### Sounds 
+
+The sound effects are provided by: 
+
+1. Mike Koening
+  - [Airhorn](https://soundbible.com/1542-Air-Horn.html#)
+  - [Fog Horn](https://soundbible.com/1594-Fog-Horn.html)
+2. Daniel Simion
+  - [Fire Truck](https://soundbible.com/2192-Fire-Truck-Horn.html)

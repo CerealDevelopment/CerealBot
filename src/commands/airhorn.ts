@@ -1,10 +1,24 @@
 import fs from "fs";
 import { Message, VoiceConnection } from "discord.js";
 
-async function airhorn(message: Message) {
-  if (message.member.voice.channel) {
+const pathToAirhornFiles: string = "./resources/sounds/airhorns";
+
+const airhornFiles: Array<string> = fs
+  .readdirSync(pathToAirhornFiles)
+  .filter((file) => file.endsWith(".wav"));
+
+async function airhorn(
+  message: Message,
+  pathToAirhornFiles: string,
+  airhornFiles: Array<string>
+) {
+  const chooseFile: number = Math.floor(Math.random() * airhornFiles.length);
+
+  if (airhornFiles.length === 0) {
+    message.channel.send("The Airhorns were stolen :fearful:");
+  } else if (message.member.voice.channel) {
     const audioFile: fs.ReadStream = fs.createReadStream(
-      "./resources/sounds/airhorn_default.wav"
+      pathToAirhornFiles + "/" + airhornFiles[chooseFile]
     );
     const connection: VoiceConnection = await message.member.voice.channel.join();
 
@@ -14,26 +28,26 @@ async function airhorn(message: Message) {
     dispatcher.setVolume(0.5);
 
     dispatcher.on("start", () => {
-      console.log("airhorn_default.wav is now playing!");
+      console.log(airhornFiles[chooseFile] + " is now playing!");
     });
 
     dispatcher.on("finish", () => {
-      console.log("airhorn_default.wav has finished playing!");
+      console.log(airhornFiles[chooseFile] + " has finished playing!");
       dispatcher.destroy();
       connection.disconnect();
     });
 
-    // Always remember to handle errors appropriately!
     dispatcher.on("error", console.error);
+    connection.on("error", console.error);
   }
 }
 
 module.exports = {
   name: "airhorn",
-  description: "BEEEP!",
+  description: "Plays a random BEEEP!",
   args: false,
   usage: "",
   execute(message: Message) {
-    airhorn(message);
+    airhorn(message, pathToAirhornFiles, airhornFiles);
   },
 };
