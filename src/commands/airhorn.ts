@@ -18,21 +18,21 @@ async function airhorn(
     message.channel.send("The Airhorns were stolen :fearful:");
   } else if (message.member.voice.channel) {
     const audioFile: fs.ReadStream = fs.createReadStream(
-      pathToAirhornFiles + "/" + airhornFiles[chooseFile]
+      `${pathToAirhornFiles}/${airhornFiles[chooseFile]}`
     );
     const connection: VoiceConnection = await message.member.voice.channel.join();
 
-    // Create a dispatcher
-    const dispatcher = connection.play(audioFile, { type: "unknown" });
-
-    dispatcher.setVolume(0.5);
+    const dispatcher = connection.play(audioFile, {
+      type: "unknown",
+      volume: 0.5,
+    });
 
     dispatcher.on("start", () => {
-      console.log(airhornFiles[chooseFile] + " is now playing!");
+      console.log(`${airhornFiles[chooseFile]} is now playing!`);
     });
 
     dispatcher.on("finish", () => {
-      console.log(airhornFiles[chooseFile] + " has finished playing!");
+      console.log(`${airhornFiles[chooseFile]} has finished playing!`);
       dispatcher.destroy();
       connection.disconnect();
     });
