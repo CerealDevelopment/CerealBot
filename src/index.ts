@@ -1,13 +1,14 @@
 import { Client, Collection, Message } from "discord.js";
 import config from "../config.json";
-import fs from "fs";
+import utils from "./utils";
 
 const client: Client = new Client();
 const prefix: string = config.PREFIX;
 const commands: Collection<string, CommandInterface> = new Collection();
-const commandFiles: Array<string> = fs
-  .readdirSync("lib/commands")
-  .filter((file) => file.endsWith(".js"));
+const commandFiles: Array<string> = utils.findFilesWithEnding(
+  "lib/commands",
+  ".js"
+);
 
 client.login(config.BOT_TOKEN);
 

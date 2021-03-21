@@ -6,6 +6,11 @@ WORKDIR /opt/cerealbot
 
 COPY . .
 
-RUN sudo apt-get install ffmpeg && npm install
+RUN sudo apt-get update && \
+    sudo apt-get install ffmpeg && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install
+
+USER cerealbot
 
 CMD npm start
