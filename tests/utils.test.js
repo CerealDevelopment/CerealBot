@@ -8,11 +8,6 @@ test("find files ending .exe", () => {
     expect(utils.findFilesWithEnding(".", ".exe")).toEqual([]);
   });
 
-test("generate random number that is unequal to the last", () => {
-
-});
-
-
 const maxValue = 100;
 function numberGenerator() {
   let output = []
