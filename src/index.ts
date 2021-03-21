@@ -1,4 +1,4 @@
-import { Client, Collection, Message  } from "discord.js";
+import { Client, Collection, Message } from "discord.js";
 import config from "../config.json";
 import utils from "./utils";
 
