@@ -1,21 +1,21 @@
-import { MessageAttachment, MessageEmbed } from "discord.js";
+import { AxiosRequestConfig } from 'axios'
+import { getResource } from '../api/http'
+import { DANBOORU_RANDOM_URL } from '../../config.json'
 
-const attachments: Array<MessageAttachment> = [
-  new MessageAttachment("./resources/memes/zerotwo.png", "zerotwo.png"),
-];
-const zeroTwoEmbed: MessageEmbed = new MessageEmbed();
-
-zeroTwoEmbed
-  .setTitle(":P")
-  .attachFiles(attachments)
-  .setImage("attachment://zerotwo.png");
+const config: AxiosRequestConfig = {
+  headers: {
+      Accept: "application/json"
+  }
+}
 
 module.exports = {
   name: "meme",
   args: false,
-  usage: "",
+  usage: "<9gag>|<anime>|<joke>",
   description: "",
   execute(message) {
-    message.channel.send(zeroTwoEmbed);
+    getResource(DANBOORU_RANDOM_URL, config).then(result => {
+      message.channel.send(result.data["file_url"]);
+    })
   },
 };
