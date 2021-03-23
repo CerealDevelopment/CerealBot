@@ -6,8 +6,8 @@ WORKDIR /opt/cerealbot
 
 COPY . .
 
-RUN sudo apt-get update && \
-    sudo apt-get install ffmpeg && \
+RUN apt-get update -y && \
+    apt-get install ffmpeg -y && \
     rm -rf /var/lib/apt/lists/* && \
     npm install
 
