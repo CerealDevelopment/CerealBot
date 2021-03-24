@@ -4,7 +4,7 @@
   "description": "Cereal Bot for extreme Cereal Content",
   "main": "lib/index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "build": "babel src -d lib --extensions '.ts'",
     "start": "node --experimental-json-modules ./lib/index.js",
     "pretty": "npx prettier --write ./src",
