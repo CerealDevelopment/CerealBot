@@ -32,7 +32,19 @@ Current required items in config.json:
 
 **RUN**
 
-`docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json cereal_bot:latest` 
+`docker run -d -v "$(pwd)/config.json:/opt/cerealbot/config.json" cereal_bot:latest`
+
+**PULL**
+
+`docker pull cerealdevelopment/cerealbot`
+
+or
+
+`docker pull cerealdevelopment/cerealbot:latest`
+
+**PUSH**
+
+`tba`
 
 ## Used resources 
 
