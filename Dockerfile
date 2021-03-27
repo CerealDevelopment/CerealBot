@@ -10,7 +10,7 @@ RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
     apt-get install ffmpeg -y && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install
+    npm ci
 
 USER cerealbot
 

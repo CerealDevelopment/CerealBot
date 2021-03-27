@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/CerealDevelopment/CerealBot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.4.0",
     "discord.js": "^12.5.1",
+    "@discordjs/opus": "^0.4.0",
     "require": "^2.4.20"
   },
   "devDependencies": {
