@@ -9,7 +9,8 @@
     "start": "node --experimental-json-modules ./lib/index.js",
     "pretty": "npx prettier --write ./src",
     "clean": "rm -rf node_modules",
-    "clean-install": "npm run-script clean && npm install"
+    "clean-install": "npm run-script clean && npm install",
+    "source": "source .env"
   },
   "repository": {
     "type": "git",

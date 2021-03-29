@@ -3,14 +3,23 @@ import config from "../config.json";
 import utils from "./utils";
 
 const client: Client = new Client();
-const prefix: string = config.PREFIX;
+const prefix: string = config.PREFIX ? config.PREFIX : "!";
 const commands: Collection<string, CommandInterface> = new Collection();
 const commandFiles: Array<string> = utils.findFilesWithEnding(
   "lib/commands",
   ".js"
 );
 
-client.login(config.BOT_TOKEN);
+const BOT_TOKEN: string = process.env.BOT_TOKEN
+  ? process.env.BOT_TOKEN
+  : config.BOT_TOKEN;
+
+try {
+  client.login(BOT_TOKEN);
+} catch (error) {
+  console.log(error);
+  process.exit(1);
+}
 
 export interface CommandInterface {
   name: string;
