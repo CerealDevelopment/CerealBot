@@ -3,9 +3,13 @@ node_modules/
 .github/
 tests/
 coverage/
+src/
 
 # Configs
 babel.config.json
 jest.config.json
 config.json
 .env
+
+# Other files 
+yarn.lock

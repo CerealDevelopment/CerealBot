@@ -14,6 +14,11 @@ const BOT_TOKEN: string = process.env.BOT_TOKEN
   ? process.env.BOT_TOKEN
   : config.BOT_TOKEN;
 
+if (!BOT_TOKEN) {
+  console.log("The 'BOT_TOKEN' is missing.");
+  process.exit(1);
+}
+
 try {
   client.login(BOT_TOKEN);
 } catch (error) {
