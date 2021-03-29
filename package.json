@@ -12,7 +12,7 @@
     "clean-install": "npm run-script clean && npm install",
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "docker build --tag cerealdevelopment/cerealbot:latest .",
-    "docker-push": "docker cerealdevelopment/cerealbot:latest",
+    "docker-push": "docker push cerealdevelopment/cerealbot:latest",
     "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -e BOT_TOKEN=$BOT_TOKEN cerealdevelopment/cerealbot:latest"
   },
   "repository": {
