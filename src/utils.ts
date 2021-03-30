@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Collection, Message } from "discord.js";
 
 /**
  * Find all files from a given directory with a given file ending.
@@ -25,7 +26,24 @@ function getRandomNumber(maxValue: number, lastNumber: number = 0): number {
   return newNumber;
 }
 
-export default {
-  findFilesWithEnding,
-  getRandomNumber,
-};
+const commands: Collection<string, CommandInterface> = new Collection();
+const commandFiles: Array<string> = findFilesWithEnding("lib/commands", ".js");
+
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  commands.set(command.name, command);
+}
+
+function getCommandMap(): Collection<string, CommandInterface> {
+  return commands;
+}
+
+interface CommandInterface {
+  name: string;
+  description: string;
+  args: boolean;
+  usage: string;
+  execute(message: Message, args?: Array<string>);
+}
+
+export { findFilesWithEnding, getRandomNumber, getCommandMap };
