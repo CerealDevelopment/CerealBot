@@ -1,10 +1,10 @@
 import fs from "fs";
 import { Message, VoiceConnection } from "discord.js";
-import utils from "../utils";
+import { findFilesWithEnding, getRandomNumber } from "../utils";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
-const airhornFiles: Array<string> = utils.findFilesWithEnding(
+const airhornFiles: Array<string> = findFilesWithEnding(
   pathToAirhornFiles,
   ".wav"
 );
@@ -12,7 +12,7 @@ const airhornFiles: Array<string> = utils.findFilesWithEnding(
 let lastIndexOfAudioFile: number = 0;
 
 /**
- * Plays an audio file using the Bot user in the audio channel, of whoever wrote the message. 
+ * Plays an audio file using the Bot user in the audio channel, of whoever wrote the message.
  * @param message - Discord message to find the correct Audio channel to play the sound in
  * @param chosenFile - The file to be played in the channel
  */
@@ -53,7 +53,7 @@ async function airhorn(
   audioFiles: Array<string>,
   lastIndexOfAudioFile: number
 ): Promise<number> {
-  const chooseFileNumber: number = utils.getRandomNumber(
+  const chooseFileNumber: number = getRandomNumber(
     audioFiles.length,
     lastIndexOfAudioFile
   );
@@ -76,10 +76,13 @@ module.exports = {
   cooldown: 5,
   usage: "",
   execute(message: Message) {
-    airhorn(message, pathToAirhornFiles, airhornFiles, lastIndexOfAudioFile).then(
-      (value: number) => {
-        lastIndexOfAudioFile = value;
-      }
-    );
+    airhorn(
+      message,
+      pathToAirhornFiles,
+      airhornFiles,
+      lastIndexOfAudioFile
+    ).then((value: number) => {
+      lastIndexOfAudioFile = value;
+    });
   },
 };
