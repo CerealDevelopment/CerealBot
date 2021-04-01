@@ -1,22 +1,23 @@
 import fs from "fs";
 import { Message, VoiceConnection } from "discord.js";
 import utils from "../utils";
+import config from "../../config.json";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
 const airhornFiles: Array<string> = utils.findFilesWithEnding(
   pathToAirhornFiles,
-  ".wav"
+  config.AUDIO_FILE_FORMAT
 );
 
 let lastIndexOfAudioFile: number = 0;
 
 /**
- * Plays an audio file using the Bot user in the audio channel, of whoever wrote the message. 
+ * Plays an audio file using the Bot user in the audio channel, of whoever wrote the message.
  * @param message - Discord message to find the correct Audio channel to play the sound in
  * @param chosenFile - The file to be played in the channel
  */
-async function playAudio(message: Message, chosenFile: string) {
+const playAudio = async (message: Message, chosenFile: string) => {
   const audioFile: fs.ReadStream = fs.createReadStream(chosenFile);
   const connection: VoiceConnection = await message.member.voice.channel.join();
 
@@ -37,7 +38,7 @@ async function playAudio(message: Message, chosenFile: string) {
 
   dispatcher.on("error", console.error);
   connection.on("error", console.error);
-}
+};
 
 /**
  * Plays back a random sound from the directory
@@ -47,12 +48,12 @@ async function playAudio(message: Message, chosenFile: string) {
  * @param lastIndexOfAudioFile - Latest index of the played file
  * @returns - The index of the last played file
  */
-async function airhorn(
+const airhorn = async (
   message: Message,
   pathToAudioFiles: string,
   audioFiles: Array<string>,
   lastIndexOfAudioFile: number
-): Promise<number> {
+): Promise<number> => {
   const chooseFileNumber: number = utils.getRandomNumber(
     audioFiles.length,
     lastIndexOfAudioFile
@@ -61,13 +62,13 @@ async function airhorn(
 
   if (audioFiles.length === 0) {
     message.channel.send("The Airhorns were stolen :fearful:");
-  } else if (message.member.voice.channel) {
-    playAudio(message, chosenFile);
-  } else {
+  } else if (!message.member.voice.channel) {
     message.channel.send("You need to enter a voice channel ~");
+  } else {
+    await playAudio(message, chosenFile);
   }
   return chooseFileNumber;
-}
+};
 
 module.exports = {
   name: "airhorn",
@@ -75,11 +76,12 @@ module.exports = {
   args: false,
   cooldown: 5,
   usage: "",
-  execute(message: Message) {
-    airhorn(message, pathToAirhornFiles, airhornFiles, lastIndexOfAudioFile).then(
-      (value: number) => {
-        lastIndexOfAudioFile = value;
-      }
+  async execute(message: Message) {
+    lastIndexOfAudioFile = await airhorn(
+      message,
+      pathToAirhornFiles,
+      airhornFiles,
+      lastIndexOfAudioFile
     );
   },
 };

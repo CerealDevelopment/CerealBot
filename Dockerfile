@@ -14,4 +14,6 @@ RUN useradd -ms /bin/bash cerealbot && \
 
 USER cerealbot
 
+ENV BOT_TOKEN=""
+
 CMD npm start
