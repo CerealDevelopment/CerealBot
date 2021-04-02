@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 const sum = async (args: string[]): Promise<number> => {
   const parsedValues = args.map((x) => parseFloat(x));
   return parsedValues.reduce((counter, x) => (counter += x));
-}
+};
 
 export default module.exports = {
   name: "sum",

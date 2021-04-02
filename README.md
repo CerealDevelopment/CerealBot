@@ -43,6 +43,12 @@ Current required items in config.json:
 }
 ```
 
+## Converting audio types
+
+Using `opusenc` it is very simple to convert a `.wav` to `opus/.ogg`:
+
+`opusenc --bitrate 256 <input_file.wav> <output_file.ogg>`
+
 ## Used resources
 
 ### Sounds
