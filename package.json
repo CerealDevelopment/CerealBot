@@ -7,7 +7,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "build": "babel src -d lib --extensions \".ts\"",
     "start": "node --experimental-json-modules ./lib/index.js",
-    "pretty": "npx prettier --write ./src",
+    "pretty": "npx prettier --write \"./src\" \"./tests\"",
     "clean": "rm -rf node_modules",
     "clean-install": "npm run-script clean && npm install",
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",

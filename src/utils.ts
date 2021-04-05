@@ -26,16 +26,21 @@ function getRandomNumber(maxValue: number, lastNumber: number = 0): number {
   return newNumber;
 }
 
-const commands: Collection<string, CommandInterface> = new Collection();
-const commandFiles: Array<string> = findFilesWithEnding("lib/commands", ".js");
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  commands.set(command.name, command);
-}
+const commandMap = (() => {
+  const commandFiles: Array<string> = findFilesWithEnding(
+    "lib/commands",
+    ".js"
+  );
+  const collection: Collection<string, CommandInterface> = new Collection();
+  for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    collection.set(command.name, command);
+  }
+  return collection;
+})();
 
 function getCommandMap(): Collection<string, CommandInterface> {
-  return commands;
+  return commandMap;
 }
 
 interface CommandInterface {
@@ -46,4 +51,9 @@ interface CommandInterface {
   execute(message: Message, args?: Array<string>);
 }
 
-export { findFilesWithEnding, getRandomNumber, getCommandMap };
+export {
+  findFilesWithEnding,
+  getRandomNumber,
+  getCommandMap,
+  CommandInterface,
+};

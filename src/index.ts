@@ -1,6 +1,6 @@
 import { Client, Collection, Message } from "discord.js";
 import config from "../config.json";
-import { getCommandMap } from "./utils";
+import { CommandInterface, getCommandMap } from "./utils";
 
 const client: Client = new Client();
 const prefix: string = config.PREFIX ? config.PREFIX : "!";
@@ -34,7 +34,7 @@ client.on("message", (message: Message) => {
   const command = args.shift().toLocaleLowerCase();
 
   try {
-    const executable = getCommandMap().get(command);
+    const executable: CommandInterface = getCommandMap().get(command);
     if (executable.args && !args.length) {
       let reply = `You didn't provide any arguments, ${message.author}!`;
       if (executable.usage) {
