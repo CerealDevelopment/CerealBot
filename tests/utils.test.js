@@ -12,6 +12,12 @@ test("find files ending .exe", () => {
   expect(findFilesWithEnding(".", ".exe")).toEqual([]);
 });
 
+test("size of command map", () => {
+  const files = findFilesWithEnding("lib/commands", ".js");
+  const expectedSize = Object.keys(files).length;
+  expect(getCommandMap().size).toBe(expectedSize);
+});
+
 const maxValue = 100;
 function numberGenerator() {
   let output = [];
@@ -23,10 +29,4 @@ function numberGenerator() {
 
 test.each(numberGenerator())("%i should not be equal the last number", (n) => {
   expect(getRandomNumber(maxValue, n)).not.toBe(n);
-});
-
-test("size of command map", () => {
-  const files = findFilesWithEnding("lib/commands", ".js");
-  const expectedSize = Object.keys(files).length;
-  expect(getCommandMap().size).toBe(expectedSize);
 });
