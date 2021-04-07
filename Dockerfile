@@ -9,7 +9,8 @@ COPY . .
 RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
     apt-get install ffmpeg -y && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
 
