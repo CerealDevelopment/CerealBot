@@ -1,11 +1,11 @@
 import fs from "fs";
 import { Message, VoiceConnection } from "discord.js";
-import utils from "../utils";
+import { findFilesWithEnding, getRandomNumber } from "../utils";
 import config from "../../config.json";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
-const airhornFiles: Array<string> = utils.findFilesWithEnding(
+const airhornFiles: Array<string> = findFilesWithEnding(
   pathToAirhornFiles,
   config.AUDIO_FILE_FORMAT
 );
@@ -54,7 +54,7 @@ const airhorn = async (
   audioFiles: Array<string>,
   lastIndexOfAudioFile: number
 ): Promise<number> => {
-  const chooseFileNumber: number = utils.getRandomNumber(
+  const chooseFileNumber: number = getRandomNumber(
     audioFiles.length,
     lastIndexOfAudioFile
   );

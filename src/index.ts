@@ -1,14 +1,9 @@
 import { Client, Collection, Message } from "discord.js";
 import config from "../config.json";
-import utils from "./utils";
+import { CommandInterface, getCommandMap } from "./utils";
 
 const client: Client = new Client();
 const prefix: string = config.PREFIX ? config.PREFIX : "!";
-const commands: Collection<string, CommandInterface> = new Collection();
-const commandFiles: Array<string> = utils.findFilesWithEnding(
-  "lib/commands",
-  ".js"
-);
 
 const BOT_TOKEN: string = process.env.BOT_TOKEN
   ? process.env.BOT_TOKEN
@@ -26,19 +21,6 @@ try {
   process.exit(1);
 }
 
-export interface CommandInterface {
-  name: string;
-  description: string;
-  args: boolean;
-  usage: string;
-  execute(message: Message, args?: Array<string>);
-}
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  commands.set(command.name, command);
-}
-
 client.once("ready", () => {
   console.log("Time to get cereal!");
 });
@@ -52,7 +34,7 @@ client.on("message", (message: Message) => {
   const command = args.shift().toLocaleLowerCase();
 
   try {
-    const executable: CommandInterface = commands.get(command);
+    const executable: CommandInterface = getCommandMap().get(command);
     if (executable.args && !args.length) {
       let reply = `You didn't provide any arguments, ${message.author}!`;
       if (executable.usage) {
@@ -60,7 +42,7 @@ client.on("message", (message: Message) => {
       }
       message.channel.send(reply);
     } else {
-      commands.get(command).execute(message, args);
+      executable.execute(message, args);
     }
   } catch (error) {
     console.error(error);
