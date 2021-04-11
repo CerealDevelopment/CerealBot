@@ -27,9 +27,10 @@ const getFormattedAnswer = async (args: string[]): Promise<string> => {
     return `Here is a list of all featured commands:\n${commandString}\nFor more specific help type \`${prefix}help 'command_name'\`.`;
   } else {
     // More specific command help
-    const command: CommandInterface = getCommandMap().get(args[0]);
+    const arg = args.shift().toLocaleLowerCase();
+    const command: CommandInterface = getCommandMap().get(arg);
     if (!command) {
-      return "Unknown command: " + args[0];
+      return "Unknown command: " + arg;
     } else {
       let answer =
         "\nName: " + command.name + "\nDescription: " + command.description;
