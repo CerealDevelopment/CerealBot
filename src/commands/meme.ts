@@ -66,7 +66,7 @@ module.exports = {
   name: "meme",
   args: false,
   usage: "",
-  description: "",
+  description: "Post a random (hopefully) meme image.",
   async execute(message: Message) {
     message.channel.send(await fetchImgurResult());
   },
