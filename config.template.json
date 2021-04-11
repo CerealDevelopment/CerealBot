@@ -1,5 +1,6 @@
-
 {
     "PREFIX": "!",
-    "AUDIO_FILE_FORMAT": ".ogg"
+    "AUDIO_FILE_FORMAT": ".ogg",
+    "IMGUR_URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
+    "IMGUR_AUTHORIZATION": "Client-ID <API_KEY>"
 }

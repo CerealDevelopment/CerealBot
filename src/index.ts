@@ -46,6 +46,8 @@ client.on("message", (message: Message) => {
     }
   } catch (error) {
     console.error(error);
-    message.reply("I'm sorry, but I couldn't execute that command.");
+    message.reply(
+      "I'm sorry, but something happend while executing that command! Please try again. Or not... thats up to you."
+    );
   }
 });
