@@ -10,10 +10,13 @@ RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
     apt-get install ffmpeg -y && \
     rm -rf /var/lib/apt/lists/* && \
-    npm ci
+    chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
 
 ENV BOT_TOKEN=""
+
+RUN npm ci && \
+    npm run build
 
 CMD npm start

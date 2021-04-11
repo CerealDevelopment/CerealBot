@@ -2,6 +2,9 @@
 
 > Only for the most Cereal people
 
+[![Node.js CI](https://github.com/CerealDevelopment/CerealBot/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/CerealDevelopment/CerealBot/actions/workflows/main.yml)
+[![Docker CI](https://github.com/CerealDevelopment/CerealBot/actions/workflows/docker.yml/badge.svg?branch=master)](https://github.com/CerealDevelopment/CerealBot/actions/workflows/docker.yml)
+
 A Discord Bot for memes, airhorn noises and even more cereal things!
 
 ## NPM commands

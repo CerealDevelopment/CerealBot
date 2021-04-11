@@ -5,7 +5,7 @@ const sum = async (args: string[]): Promise<number> => {
   return parsedValues.reduce((counter, x) => (counter += x));
 };
 
-export default module.exports = {
+module.exports = {
   name: "sum",
   description: "A cereal accumulation of given numbers!",
   args: true,
@@ -14,5 +14,5 @@ export default module.exports = {
     const result = await sum(args);
     message.reply(`The sum of all the arguments you provided is ${result}!`);
   },
-  testable_fun: sum,
+  sum,
 };
