@@ -22,8 +22,9 @@ const playAudio = async (message: Message, chosenFile: string) => {
   const connection: VoiceConnection = await message.member.voice.channel.join();
 
   const dispatcher = connection.play(audioFile, {
-    type: "unknown",
+    type: "ogg/opus",
     volume: 0.5,
+    highWaterMark: 50,
   });
 
   dispatcher.on("start", () => {
