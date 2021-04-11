@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
-import utils from "../utils";
+import { resourceEndsWith, getCerealColor, getRandomNumber } from "../utils";
 import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../config.json";
 
 const headers = {
@@ -36,7 +36,7 @@ const handleImgurResult = (result: JSON): Array<ImgurImageEntry> => {
 };
 
 const pushImage = (item: JSON, imgurEntryResults: Array<ImgurImageEntry>) => {
-  if (utils.resourceEndsWith(item["link"], imageEnding)) {
+  if (resourceEndsWith(item["link"], imageEnding)) {
     imgurEntryResults.push(new ImgurImageEntry(item));
   }
 };
@@ -46,7 +46,7 @@ const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
   const desc = imgurObject.description !== null ? imgurObject.description : "";
   const link = imgurObject.link;
   return new MessageEmbed()
-    .setColor(utils.getCerealColor())
+    .setColor(getCerealColor())
     .setTitle(title)
     .setDescription(desc)
     .setImage(link);
@@ -58,7 +58,7 @@ const fetchImgurResult = async (): Promise<string | MessageEmbed> => {
     .catch((error: Error) => console.error(error));
   const imgurObjectLinks = handleImgurResult(imgurResult);
   const randomImgurObject =
-    imgurObjectLinks[utils.getRandomNumber(imgurObjectLinks.length - 1)];
+    imgurObjectLinks[getRandomNumber(imgurObjectLinks.length - 1)];
   return createMessageEmbed(randomImgurObject);
 };
 
