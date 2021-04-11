@@ -14,5 +14,5 @@ module.exports = {
     const result = await sum(args);
     message.reply(`The sum of all the arguments you provided is ${result}!`);
   },
-  testable_fun: sum,
+  sum,
 };
