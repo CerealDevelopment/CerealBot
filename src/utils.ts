@@ -52,7 +52,7 @@ const getCerealColor = (): string => {
 const commandMap = (() => {
   const collection: Collection<string, CommandInterface> = new Collection();
 
-  const commandFolders = fs.readdirSync('lib/commands');
+  const commandFolders = fs.readdirSync("lib/commands");
   for (const folder of commandFolders) {
     const commandFiles: Array<string> = findFilesWithEnding(
       `lib/commands/${folder}`,

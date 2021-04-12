@@ -14,7 +14,7 @@ test("find files ending .exe", () => {
 });
 
 test("size of command map", () => {
-  const commandFolders = fs.readdirSync('lib/commands');
+  const commandFolders = fs.readdirSync("lib/commands");
   let files = [];
   for (const folder of commandFolders) {
     files = files.concat(findFilesWithEnding(`lib/commands/${folder}/`, ".js"));
