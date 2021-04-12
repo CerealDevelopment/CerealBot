@@ -1,3 +1,4 @@
+import fs from "fs";
 import {
   findFilesWithEnding,
   getRandomNumber,
@@ -13,7 +14,11 @@ test("find files ending .exe", () => {
 });
 
 test("size of command map", () => {
-  const files = findFilesWithEnding("lib/commands", ".js");
+  const commandFolders = fs.readdirSync('lib/commands');
+  let files = [];
+  for (const folder of commandFolders) {
+    files = files.concat(findFilesWithEnding(`lib/commands/${folder}/`, ".js"));
+  }
   const expectedSize = Object.keys(files).length;
   expect(getCommandMap().size).toBe(expectedSize);
 });

@@ -50,14 +50,18 @@ const getCerealColor = (): string => {
 };
 
 const commandMap = (() => {
-  const commandFiles: Array<string> = findFilesWithEnding(
-    "lib/commands",
-    ".js"
-  );
   const collection: Collection<string, CommandInterface> = new Collection();
-  for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    collection.set(command.name, command);
+
+  const commandFolders = fs.readdirSync('lib/commands');
+  for (const folder of commandFolders) {
+    const commandFiles: Array<string> = findFilesWithEnding(
+      `lib/commands/${folder}`,
+      ".js"
+    );
+    for (const file of commandFiles) {
+      const command = require(`./commands/${folder}/${file}`);
+      collection.set(command.name, command);
+    }
   }
   return collection;
 })();
