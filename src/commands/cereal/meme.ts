@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
-import { resourceEndsWith, getCerealColor, getRandomNumber } from "../utils";
-import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../config.json";
+import { resourceEndsWith, getCerealColor, getRandomNumber } from "../../utils";
+import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../../config.json";
 
 const headers = {
   Accept: "application/json",
