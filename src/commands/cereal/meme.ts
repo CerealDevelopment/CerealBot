@@ -1,12 +1,12 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import { resourceEndsWith, getCerealColor, getRandomNumber } from "../../utils";
-import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../../config.json";
 import _ from "lodash";
+import { IMGUR } from "../../../config.json";
 
 const headers = {
   Accept: "application/json",
-  Authorization: IMGUR_AUTHORIZATION,
+  Authorization: IMGUR.AUTHORIZATION,
 };
 
 class ImgurImageEntry {
@@ -54,7 +54,7 @@ const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
 };
 
 const fetchImgurResult = async (): Promise<string | MessageEmbed> => {
-  const imgurResult = await fetch(IMGUR_URL, { headers: headers })
+  const imgurResult = await fetch(IMGUR.URL, { headers: headers })
     .then((response) => response.json())
     .catch((error: Error) => console.error(error));
   const imgurObjectLinks = handleImgurResult(imgurResult);
