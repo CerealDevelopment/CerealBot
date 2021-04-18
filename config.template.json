@@ -1,12 +1,14 @@
 {
-    "PREFIX": "!",
-    "AUDIO_FILE_FORMAT": ".ogg",
-    "IMGUR": {
-        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
-        "AUTHORIZATION": "Client-ID <API_KEY>",
+    "DISCORD": {
+        "PREFIX": "!",
         "EMBED": {
             "TITLE_CHAR_LIMIT": 256,
             "DESC_CHAR_LIMIT": 2048
         }
+    },
+    "AUDIO_FILE_FORMAT": ".ogg",
+    "IMGUR": {
+        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
+        "AUTHORIZATION": "Client-ID <API_KEY>"
     }
 }
