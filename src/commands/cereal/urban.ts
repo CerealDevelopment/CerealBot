@@ -1,9 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import querystring from "querystring";
 import fetch from "node-fetch";
-
-const trim = (str: string, max: number) =>
-  str.length > max ? `${str.slice(0, max - 3)}...` : str;
+import { trim } from "../../utils";
 
 const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });

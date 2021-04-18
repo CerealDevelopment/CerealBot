@@ -70,6 +70,15 @@ function getCommandMap(): Collection<string, CommandInterface> {
   return commandMap;
 }
 
+/**
+ * The length of a string is checked and trimmed if it's longer than the given maximum length.
+ * @param str The string which is checked and potentially be trimmed
+ * @param max The threshold at which length ´str´ is trimmed
+ */
+const trim = (str: string, max: number): string => {
+  return str.length > max ? `${str.slice(0, max - 3)}...` : str;
+};
+
 interface CommandInterface {
   name: string;
   description: string;
@@ -85,4 +94,5 @@ export {
   CommandInterface,
   resourceEndsWith,
   getCerealColor,
+  trim,
 };

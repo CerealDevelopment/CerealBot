@@ -1,13 +1,13 @@
-import { Client, Collection, Message } from "discord.js";
-import config from "../config.json";
+import { Client, Message } from "discord.js";
+import { DISCORD } from "../config.json";
 import { CommandInterface, getCommandMap } from "./utils";
 
 const client: Client = new Client();
-const prefix: string = config.PREFIX ? config.PREFIX : "!";
+const prefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
 const BOT_TOKEN: string = process.env.BOT_TOKEN
   ? process.env.BOT_TOKEN
-  : config.BOT_TOKEN;
+  : DISCORD.BOT_TOKEN;
 
 if (!BOT_TOKEN) {
   console.log("The 'BOT_TOKEN' is missing.");
