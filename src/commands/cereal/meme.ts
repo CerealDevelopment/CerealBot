@@ -1,8 +1,13 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
-import { resourceEndsWith, getCerealColor, getRandomNumber } from "../../utils";
+import {
+  resourceEndsWith,
+  getCerealColor,
+  getRandomNumber,
+  trim,
+} from "../../utils";
 import _ from "lodash";
-import { IMGUR } from "../../../config.json";
+import { IMGUR, DISCORD } from "../../../config.json";
 
 const headers = {
   Accept: "application/json",
@@ -48,8 +53,8 @@ const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
   const link = imgurObject.link;
   return new MessageEmbed()
     .setColor(getCerealColor())
-    .setTitle(title)
-    .setDescription(desc)
+    .setTitle(trim(title, DISCORD.EMBED.TITLE_CHAR_LIMIT))
+    .setDescription(trim(desc, DISCORD.EMBED.DESC_CHAR_LIMIT))
     .setImage(link);
 };
 
