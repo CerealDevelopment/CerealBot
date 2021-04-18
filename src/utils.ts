@@ -17,7 +17,7 @@ const findFilesWithEnding = (
 /**
  * Checks, if a string ends on one of the given endings
  * @param str - String to check the ending of
- * @param fileEndings - Set with all exetable string endings
+ * @param fileEndings - Set with all acceptable string endings
  * @returns - A boolean, that becomes true, if the string ends on the fileEnding Set
  */
 const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
