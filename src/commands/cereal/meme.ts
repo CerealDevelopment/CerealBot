@@ -2,6 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import { resourceEndsWith, getCerealColor, getRandomNumber } from "../../utils";
 import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../../config.json";
+import _ from "lodash";
 
 const headers = {
   Accept: "application/json",
@@ -22,23 +23,23 @@ class ImgurImageEntry {
 const imageEnding: Set<string> = new Set(["jpg", "png"]);
 
 const handleImgurResult = (result: JSON): Array<ImgurImageEntry> => {
-  let imgurEntryResults: Array<ImgurImageEntry> = [];
-  for (let item of result["data"]["items"]) {
-    if (item["is_album"]) {
-      for (let subItem of item["images"]) {
-        pushImage(subItem, imgurEntryResults);
+  const imgurResults: Array<ImgurImageEntry> = _.flatMap(
+    result["data"]["items"],
+    (item: JSON) => {
+      if (item["is_album"]) {
+        return _.map(item["images"], createNewEntry);
+      } else {
+        return createNewEntry(item);
       }
-    } else {
-      pushImage(item, imgurEntryResults);
     }
-  }
-  return imgurEntryResults;
+  );
+  return _.compact(imgurResults);
 };
 
-const pushImage = (item: JSON, imgurEntryResults: Array<ImgurImageEntry>) => {
-  if (resourceEndsWith(item["link"], imageEnding)) {
-    imgurEntryResults.push(new ImgurImageEntry(item));
-  }
+const createNewEntry = (json: JSON): ImgurImageEntry | null => {
+  if (resourceEndsWith(json["link"], imageEnding))
+    return new ImgurImageEntry(json);
+  else return null;
 };
 
 const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
