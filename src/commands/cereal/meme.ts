@@ -43,8 +43,8 @@ const createNewEntry = (json: JSON): ImgurImageEntry | null => {
 };
 
 const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
-  const title = imgurObject.title !== null ? imgurObject.title : "";
-  const desc = imgurObject.description !== null ? imgurObject.description : "";
+  const title = imgurObject.title ?? "";
+  const desc = imgurObject.description ?? "";
   const link = imgurObject.link;
   return new MessageEmbed()
     .setColor(getCerealColor())
