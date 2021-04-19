@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Message, VoiceConnection } from "discord.js";
-import { findFilesWithEnding, getRandomNumber } from "../utils";
-import config from "../../config.json";
+import { findFilesWithEnding, getRandomNumber } from "../../utils";
+import config from "../../../config.json";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 

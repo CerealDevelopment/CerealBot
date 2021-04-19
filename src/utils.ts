@@ -17,7 +17,7 @@ const findFilesWithEnding = (
 /**
  * Checks, if a string ends on one of the given endings
  * @param str - String to check the ending of
- * @param fileEndings - Set with all exetable string endings
+ * @param fileEndings - Set with all acceptable string endings
  * @returns - A boolean, that becomes true, if the string ends on the fileEnding Set
  */
 const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
@@ -50,14 +50,18 @@ const getCerealColor = (): string => {
 };
 
 const commandMap = (() => {
-  const commandFiles: Array<string> = findFilesWithEnding(
-    "lib/commands",
-    ".js"
-  );
   const collection: Collection<string, CommandInterface> = new Collection();
-  for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    collection.set(command.name, command);
+
+  const commandFolders = fs.readdirSync("lib/commands");
+  for (const folder of commandFolders) {
+    const commandFiles: Array<string> = findFilesWithEnding(
+      `lib/commands/${folder}`,
+      ".js"
+    );
+    for (const file of commandFiles) {
+      const command = require(`./commands/${folder}/${file}`);
+      collection.set(command.name, command);
+    }
   }
   return collection;
 })();
@@ -65,6 +69,15 @@ const commandMap = (() => {
 function getCommandMap(): Collection<string, CommandInterface> {
   return commandMap;
 }
+
+/**
+ * The length of a string is checked and trimmed if it's longer than the given maximum length.
+ * @param str The string which is checked and potentially be trimmed
+ * @param max The threshold at which length ´str´ is trimmed
+ */
+const trim = (str: string, max: number): string => {
+  return str.length > max ? `${str.slice(0, max - 3)}...` : str;
+};
 
 interface CommandInterface {
   name: string;
@@ -81,4 +94,5 @@ export {
   CommandInterface,
   resourceEndsWith,
   getCerealColor,
+  trim,
 };

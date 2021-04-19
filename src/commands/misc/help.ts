@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import { CommandInterface, getCommandMap } from "../utils";
-import config from "../../config.json";
+import { CommandInterface, getCommandMap } from "../../utils";
+import config from "../../../config.json";
 
 const prefix: string = config.PREFIX ? config.PREFIX : "!";
 

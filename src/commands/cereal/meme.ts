@@ -1,11 +1,17 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
-import { resourceEndsWith, getCerealColor, getRandomNumber } from "../utils";
-import { IMGUR_AUTHORIZATION, IMGUR_URL } from "../../config.json";
+import {
+  resourceEndsWith,
+  getCerealColor,
+  getRandomNumber,
+  trim,
+} from "../../utils";
+import _ from "lodash";
+import { IMGUR, DISCORD } from "../../../config.json";
 
 const headers = {
   Accept: "application/json",
-  Authorization: IMGUR_AUTHORIZATION,
+  Authorization: IMGUR.AUTHORIZATION,
 };
 
 class ImgurImageEntry {
@@ -22,38 +28,38 @@ class ImgurImageEntry {
 const imageEnding: Set<string> = new Set(["jpg", "png"]);
 
 const handleImgurResult = (result: JSON): Array<ImgurImageEntry> => {
-  let imgurEntryResults: Array<ImgurImageEntry> = [];
-  for (let item of result["data"]["items"]) {
-    if (item["is_album"]) {
-      for (let subItem of item["images"]) {
-        pushImage(subItem, imgurEntryResults);
+  const imgurResults: Array<ImgurImageEntry> = _.flatMap(
+    result["data"]["items"],
+    (item: JSON) => {
+      if (item["is_album"]) {
+        return _.map(item["images"], createNewEntry);
+      } else {
+        return createNewEntry(item);
       }
-    } else {
-      pushImage(item, imgurEntryResults);
     }
-  }
-  return imgurEntryResults;
+  );
+  return _.compact(imgurResults);
 };
 
-const pushImage = (item: JSON, imgurEntryResults: Array<ImgurImageEntry>) => {
-  if (resourceEndsWith(item["link"], imageEnding)) {
-    imgurEntryResults.push(new ImgurImageEntry(item));
-  }
+const createNewEntry = (json: JSON): ImgurImageEntry | null => {
+  if (resourceEndsWith(json["link"], imageEnding))
+    return new ImgurImageEntry(json);
+  else return null;
 };
 
 const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
-  const title = imgurObject.title !== null ? imgurObject.title : "";
-  const desc = imgurObject.description !== null ? imgurObject.description : "";
+  const title = imgurObject.title ?? "";
+  const desc = imgurObject.description ?? "";
   const link = imgurObject.link;
   return new MessageEmbed()
     .setColor(getCerealColor())
-    .setTitle(title)
-    .setDescription(desc)
+    .setTitle(trim(title, DISCORD.EMBED.TITLE_CHAR_LIMIT))
+    .setDescription(trim(desc, DISCORD.EMBED.DESC_CHAR_LIMIT))
     .setImage(link);
 };
 
 const fetchImgurResult = async (): Promise<string | MessageEmbed> => {
-  const imgurResult = await fetch(IMGUR_URL, { headers: headers })
+  const imgurResult = await fetch(IMGUR.URL, { headers: headers })
     .then((response) => response.json())
     .catch((error: Error) => console.error(error));
   const imgurObjectLinks = handleImgurResult(imgurResult);
