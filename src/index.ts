@@ -47,7 +47,7 @@ client.on("message", (message: Message) => {
   } catch (error) {
     console.error(error);
     message.reply(
-      "I'm sorry, but something happend while executing that command! Please try again. Or not... thats up to you."
+      `I'm sorry, but your command is unknown. Please type \`${prefix}help\` for a list of all featured commands.`
     );
   }
 });
