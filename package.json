@@ -9,7 +9,7 @@
     "start": "node --experimental-json-modules ./lib/index.js",
     "prepare": "husky install",
     "pretty": "npx prettier --write \"./src\" \"./tests\"",
-    "clean": "rm -rf node_modules",
+    "clean": "rm -rf node_modules lib",
     "clean-install": "npm run-script clean && npm install",
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "docker build --tag cerealdevelopment/cerealbot:latest .",
