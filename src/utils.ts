@@ -82,7 +82,8 @@ const trim = (str: string, max: number): string => {
 interface CommandInterface {
   name: string;
   description: string;
-  args: boolean;
+  hasArgs: boolean;
+  needsAdmin: boolean;
   usage: string;
   execute(message: Message, args?: Array<string>);
 }
