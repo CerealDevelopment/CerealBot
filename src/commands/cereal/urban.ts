@@ -3,7 +3,6 @@ import querystring from "querystring";
 import fetch from "node-fetch";
 import { trim, getCerealColor } from "../../utils";
 
-
 const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });
 

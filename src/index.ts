@@ -1,5 +1,5 @@
 import { Client, Message } from "discord.js";
-import { DISCORD } from "../config.json";
+import { DISCORD, DATABASE } from "../config.json";
 import { CommandInterface, getCommandMap } from "./utils";
 import _ from "lodash";
 import Keyv from "keyv";
@@ -23,10 +23,17 @@ try {
   process.exit(1);
 }
 
-// TODO: move sqlite to config
+// TODO: Check the admin status
 // TODO: add production database driver
-const keyvGuildConfig: Keyv = new Keyv('sqlite://database.sqlite', { namespace: "guildConfig" });
-const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
+const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
+  namespace: "guildConfig",
+});
+const executeCommand = (
+  message: Message,
+  prefix: string,
+  command: string,
+  args: string[]
+) => {
   const executable: CommandInterface = getCommandMap().get(command);
   if (executable.hasArgs && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
@@ -55,7 +62,13 @@ client.on("message", async (message: Message) => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLocaleLowerCase();
-  const executedCommand = _.attempt(executeCommand, message, prefix, command, args);
+  const executedCommand = _.attempt(
+    executeCommand,
+    message,
+    prefix,
+    command,
+    args
+  );
 
   if (_.isError(executedCommand)) {
     console.error(executedCommand);
