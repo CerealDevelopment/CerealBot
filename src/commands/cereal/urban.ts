@@ -39,7 +39,7 @@ const urban = async (args: string[]): Promise<string | MessageEmbed> => {
 module.exports = {
   name: "urban",
   description: "Ask the urban dictionary",
-  args: true,
+  hasArgs: true,
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
     const result = await urban(args);

@@ -45,7 +45,7 @@ const getFormattedAnswer = async (args: string[]): Promise<string> => {
 module.exports = {
   name: "help",
   description: "Help for all commands of this bot.",
-  args: false,
+  hasArgs: false,
   usage: "",
   async execute(message: Message, args: string[]) {
     const result = await getFormattedAnswer(args);

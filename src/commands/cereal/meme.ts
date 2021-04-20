@@ -70,7 +70,7 @@ const fetchImgurResult = async (): Promise<string | MessageEmbed> => {
 
 module.exports = {
   name: "meme",
-  args: false,
+  hasArgs: false,
   usage: "",
   description: "Post a random (hopefully) meme image.",
   async execute(message: Message) {
