@@ -23,11 +23,24 @@ try {
   process.exit(1);
 }
 
+const checkRights = (message: Message): boolean => {
+  const neededRights = new Set(["ADMINISTRATOR", "MANAGE_GUILD"]);
+  const userRights = message.member.permissions.toArray()
+
+  userRights.forEach(element => {
+    if (neededRights.has(element)) {
+      return true;
+    }
+  });
+  return false;
+}
+
 // TODO: Check the admin status
 // TODO: add production database driver
 const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });
+
 const executeCommand = (
   message: Message,
   prefix: string,
@@ -35,6 +48,13 @@ const executeCommand = (
   args: string[]
 ) => {
   const executable: CommandInterface = getCommandMap().get(command);
+  if (executable.needsAdmin) {
+    if (!checkRights(message)){
+      message.channel.send("");
+      return Error()
+    }
+  }
+
   if (executable.hasArgs && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
     if (executable.usage) {

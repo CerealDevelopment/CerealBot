@@ -23,7 +23,7 @@ const findFilesWithEnding = (
  */
 const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
   const splitArray = str.split(".");
-  if (!splitArray.length) {
+  if (!splitArray.length || splitArray.length === 1) {
     return false;
   }
   const urlEnd = splitArray[splitArray.length - 1];
