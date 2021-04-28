@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import Keyv from "keyv";
 import { createError } from "../../utils";
+import { userPermissions } from "../../discordUserPermissions";
 import { DATABASE } from "../../../config.json";
 
 const getGuildPrefix = async (
@@ -8,7 +9,10 @@ const getGuildPrefix = async (
   guildPrefixes: Keyv
 ): Promise<string> => {
   const guildId: string = message.guild.id;
-  const prefix: string = await guildPrefixes.get(guildId);
+  let prefix: string = await guildPrefixes.get(guildId);
+  if (prefix === undefined) {
+    prefix = "!"
+  }
   return `Prefix is \`${prefix}\``;
 };
 
@@ -51,7 +55,7 @@ module.exports = {
   name: "prefix",
   description: "Set the prefix for the bot",
   hasArgs: false,
-  adminOnly: true,
+  neededUserPermissions: [userPermissions.administrator, userPermissions.manage_guild],
   usage:
     "<new Prefix> - has to be a length of 1. Keep in mind to choose a symbol makes using the bot easier.",
   async execute(message: Message, args: string[]) {

@@ -23,19 +23,11 @@ try {
   process.exit(1);
 }
 
-const checkRights = (message: Message): boolean => {
-  const neededRights = new Set(["ADMINISTRATOR", "MANAGE_GUILD"]);
-  const userRights = message.member.permissions.toArray()
+const checkRights = (message: Message, rights): boolean => {
+  const user = message.member;
+  return user.hasPermission(rights);
+};
 
-  userRights.forEach(element => {
-    if (neededRights.has(element)) {
-      return true;
-    }
-  });
-  return false;
-}
-
-// TODO: Check the admin status
 // TODO: add production database driver
 const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
@@ -48,10 +40,14 @@ const executeCommand = (
   args: string[]
 ) => {
   const executable: CommandInterface = getCommandMap().get(command);
-  if (executable.needsAdmin) {
-    if (!checkRights(message)){
-      message.channel.send("");
-      return Error()
+  if (executable !== undefined) {
+    if (executable.neededUserPermissions !== undefined) {
+      if (executable.neededUserPermissions.length != 0) {
+        if (!checkRights(message, executable.neededUserPermissions)) {
+          message.channel.send("You are not allowed to run the command");
+          return Error();
+        }
+      }
     }
   }
 
@@ -77,6 +73,9 @@ client.on("message", async (message: Message) => {
   const prefix: string = guildPrefix ? guildPrefix : globalPrefix;
 
   if (!message.content.startsWith(prefix) || message.author.bot) {
+    if (_.isEqual(_.trim(message.content.toLocaleLowerCase()), "prefix")) {
+      message.reply(`Prefix is \`${prefix}\``);
+    }
     return;
   }
 

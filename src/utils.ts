@@ -95,11 +95,12 @@ const createError = (message: Message, errorMessage: string): Error => {
   );
 };
 
+
 interface CommandInterface {
   name: string;
   description: string;
   hasArgs: boolean;
-  needsAdmin: boolean;
+  neededUserPermissions: string[];
   usage: string;
   execute(message: Message, args?: Array<string>);
 }
