@@ -11,7 +11,7 @@ const getGuildPrefix = async (
   const guildId: string = message.guild.id;
   let prefix: string = await guildPrefixes.get(guildId);
   if (prefix === undefined) {
-    prefix = "!"
+    prefix = "!";
   }
   return `Prefix is \`${prefix}\``;
 };
@@ -55,7 +55,10 @@ module.exports = {
   name: "prefix",
   description: "Set the prefix for the bot",
   hasArgs: false,
-  neededUserPermissions: [userPermissions.administrator, userPermissions.manage_guild],
+  neededUserPermissions: [
+    userPermissions.administrator,
+    userPermissions.manage_guild,
+  ],
   usage:
     "<new Prefix> - has to be a length of 1. Keep in mind to choose a symbol makes using the bot easier.",
   async execute(message: Message, args: string[]) {

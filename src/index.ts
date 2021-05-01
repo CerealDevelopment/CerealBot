@@ -28,7 +28,6 @@ const checkRights = (message: Message, rights): boolean => {
   return user.hasPermission(rights);
 };
 
-// TODO: add production database driver
 const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });

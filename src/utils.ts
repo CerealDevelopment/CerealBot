@@ -95,7 +95,6 @@ const createError = (message: Message, errorMessage: string): Error => {
   );
 };
 
-
 interface CommandInterface {
   name: string;
   description: string;
