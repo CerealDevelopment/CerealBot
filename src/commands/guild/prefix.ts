@@ -9,11 +9,8 @@ const getGuildPrefix = async (
   guildPrefixes: Keyv
 ): Promise<string> => {
   const guildId: string = message.guild.id;
-  let prefix: string = await guildPrefixes.get(guildId);
-  if (prefix === undefined) {
-    prefix = "!";
-  }
-  return `Prefix is \`${prefix}\``;
+  const prefix: string = await guildPrefixes.get(guildId);
+  return `Prefix is \`${prefix ?? "!"}\``;
 };
 
 const setGuildPrefix = async (
