@@ -14,6 +14,6 @@ RUN useradd -ms /bin/bash cerealbot && \
     chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
-RUN npm ci --only=production
+RUN npm build --only=production
 
 CMD npm start
