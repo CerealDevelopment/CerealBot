@@ -1,5 +1,6 @@
 import fs from "fs";
 import { Collection, Message } from "discord.js";
+import _ from "lodash";
 
 /**
  * Find all files from a given directory with a given file ending.
@@ -22,7 +23,7 @@ const findFilesWithEnding = (
  */
 const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
   const splitArray = str.split(".");
-  if (!splitArray.length) {
+  if (!splitArray.length || splitArray.length === 1) {
     return false;
   }
   const urlEnd = splitArray[splitArray.length - 1];
@@ -36,7 +37,7 @@ const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
  * @returns - A random number, that is different than the last number.
  */
 const getRandomNumber = (maxValue: number, lastNumber: number = 0): number => {
-  const newNumber = Math.floor(Math.random() * maxValue);
+  const newNumber = _.random(0, maxValue);
   if (newNumber === lastNumber) return getRandomNumber(maxValue, lastNumber);
   return newNumber;
 };
@@ -49,6 +50,9 @@ const getCerealColor = (): string => {
   return "#ffd203";
 };
 
+/**
+ * Create map with all commands in the command directory.
+ */
 const commandMap = (() => {
   const collection: Collection<string, CommandInterface> = new Collection();
 
@@ -76,13 +80,26 @@ function getCommandMap(): Collection<string, CommandInterface> {
  * @param max The threshold at which length ´str´ is trimmed
  */
 const trim = (str: string, max: number): string => {
-  return str.length > max ? `${str.slice(0, max - 3)}...` : str;
+  return _.truncate(str, { length: max });
+};
+
+/**
+ * Create an error with on guild and user, who triggered it
+ * @param message: Discord Message to get guild and user information
+ * @param errorMessage The error description
+ * @returns An error object
+ */
+const createError = (message: Message, errorMessage: string): Error => {
+  return Error(
+    `Guild: ${message.guild.id}, Member: ${message.author}, Msg: ${errorMessage}`
+  );
 };
 
 interface CommandInterface {
   name: string;
   description: string;
-  args: boolean;
+  hasArgs: boolean;
+  neededUserPermissions: string[];
   usage: string;
   execute(message: Message, args?: Array<string>);
 }
@@ -94,5 +111,6 @@ export {
   CommandInterface,
   resourceEndsWith,
   getCerealColor,
+  createError,
   trim,
 };

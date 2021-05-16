@@ -6,6 +6,9 @@
             "DESC_CHAR_LIMIT": 2048
         }
     },
+    "DATABASE": {
+        "CONNECTION_STRING": "sqlite://database.sqlite"
+    },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
         "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",

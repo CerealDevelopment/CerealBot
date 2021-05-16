@@ -1,10 +1,11 @@
 ARG VERSION=14.16.0-buster
-
 FROM node:${VERSION}
+ENV NODE_ENV production
+ENV BOT_TOKEN=""
 
 WORKDIR /opt/cerealbot
 
-COPY . .
+COPY . /opt/cerealbot
 
 RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
@@ -13,10 +14,6 @@ RUN useradd -ms /bin/bash cerealbot && \
     chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
-
-ENV BOT_TOKEN=""
-
-RUN npm ci && \
-    npm run build
+RUN npm ci --only=production
 
 CMD npm start

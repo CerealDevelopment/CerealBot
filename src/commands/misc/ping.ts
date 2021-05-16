@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 module.exports = {
   name: "ping",
   description: "pong",
-  args: false,
+  hasArgs: false,
   usage: "",
   execute(message: Message) {
     const timeTaken = Date.now() - message.createdTimestamp;

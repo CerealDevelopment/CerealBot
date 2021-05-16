@@ -74,7 +74,7 @@ const airhorn = async (
 module.exports = {
   name: "airhorn",
   description: "Plays a random BEEEP!",
-  args: false,
+  hasArgs: false,
   cooldown: 5,
   usage: "",
   async execute(message: Message) {

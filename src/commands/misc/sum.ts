@@ -8,7 +8,7 @@ const sum = async (args: string[]): Promise<number> => {
 module.exports = {
   name: "sum",
   description: "A cereal accumulation of given numbers!",
-  args: true,
+  hasArgs: true,
   usage: "<number1> <number2> ... <numberN>",
   async execute(message: Message, args: string[]) {
     const result = await sum(args);

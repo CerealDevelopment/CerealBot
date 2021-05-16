@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import querystring from "querystring";
 import fetch from "node-fetch";
-import { trim } from "../../utils";
+import { trim, getCerealColor } from "../../utils";
 
 const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });
@@ -21,7 +21,7 @@ const urban = async (args: string[]): Promise<string | MessageEmbed> => {
 
   const [answer] = list;
   const embed = new MessageEmbed()
-    .setColor("#ffd203")
+    .setColor(getCerealColor())
     .setTitle(answer.word)
     .setURL(answer.permalink)
     .addFields(
@@ -38,7 +38,7 @@ const urban = async (args: string[]): Promise<string | MessageEmbed> => {
 module.exports = {
   name: "urban",
   description: "Ask the urban dictionary",
-  args: true,
+  hasArgs: true,
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
     const result = await urban(args);

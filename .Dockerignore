@@ -1,6 +1,7 @@
 # Directories
 node_modules/
 .github/
+.vscode/
 tests/
 coverage/
 src/
@@ -11,5 +12,5 @@ jest.config.json
 config.json
 .env
 
-# Other files 
-yarn.lock
+# Database
+*.sqlite
