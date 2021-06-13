@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "build": "babel src -d lib --extensions \".ts\"",
-    "start": "node --experimental-json-modules ./lib/index.js",
+    "start": "node ./lib/index.js",
     "pretty": "npx prettier --write \"./src\" \"./tests\"",
     "clean": "rm -rf node_modules lib",
     "clean-install": "npm run-script clean && npm install",
