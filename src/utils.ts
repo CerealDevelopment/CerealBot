@@ -70,7 +70,7 @@ const commandMap = (() => {
   return collection;
 })();
 
-function getCommandMap(): Collection<string, CommandInterface> {
+const getCommandMap = (): Collection<string, CommandInterface> => {
   return commandMap;
 }
 
