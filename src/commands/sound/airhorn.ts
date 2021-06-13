@@ -11,10 +11,19 @@ const airhornFiles: Array<string> = findFilesWithEnding(
   config.AUDIO_FILE_FORMAT
 );
 
+/**
+ * Creates a new string without white spaces and all lower case letters
+ * @param str: String to be changed
+ * @returns String without white spaces and all lower case
+ */
+ const removeAllWhiteSpacesAndToLower = (str: string): string => {
+  return _.replace(_.lowerCase(str), /(\s+)/g, "");
+}
+
 const audioFileNames: Object = _.reduce(
   airhornFiles,
   (result, value) => {
-    const key = _.startCase(_.replace(value, /(airhorn_)|(.ogg)/gi, ""));
+    const key = removeAllWhiteSpacesAndToLower(_.replace(value, /(airhorn_)|(.ogg)/gi, ""));
     result[key] = value;
     return result;
   },
@@ -92,9 +101,9 @@ const playSpecificAudioFile = async (
   if (hasAirhornErrors(message, _.keys(audioFileNames).length)){
     return;
   }
-  const choice: string = _.startCase(_.join(args, "_"))
+  const choice: string = removeAllWhiteSpacesAndToLower(_.join(args, "_"));
   const audioFile: string = _.get(audioFileNames, choice, "airhorn_default.ogg")
-  const chosenFile: string = `${pathToAudioFiles}/${audioFile}`;
+  const chosenFile: string = `${pathToAudioFiles}/${audioFile}`
   
   return playAudio(message, chosenFile)
 }
@@ -122,7 +131,7 @@ const printAirhornHelp = async (message: Message, audioFileNames: Object) => {
  * @param lastIndexOfAudioFile - Latest index of the played file
  * @returns - The index of the last played file
  */
-const airhorn = async (
+const playRandomAirhorn = async (
   message: Message,
   pathToAudioFiles: string,
   audioFiles: string[],
@@ -133,7 +142,7 @@ const airhorn = async (
   }
 
   const chooseFileNumber: number = getRandomNumber(
-    audioFiles.length,
+    audioFiles.length-1,
     lastIndexOfAudioFile
   );
   const chosenFile: string = `${pathToAudioFiles}/${audioFiles[chooseFileNumber]}`;
@@ -150,7 +159,7 @@ module.exports = {
   usage: "",
   async execute(message: Message, args: string[]) {
     if (_.isEmpty(args)) {
-      lastIndexOfAudioFile = await airhorn(
+      lastIndexOfAudioFile = await playRandomAirhorn(
         message,
         pathToAirhornFiles,
         airhornFiles,
