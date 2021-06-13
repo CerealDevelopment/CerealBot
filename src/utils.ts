@@ -72,7 +72,7 @@ const commandMap = (() => {
 
 const getCommandMap = (): Collection<string, CommandInterface> => {
   return commandMap;
-}
+};
 
 /**
  * The length of a string is checked and trimmed if it's longer than the given maximum length.
