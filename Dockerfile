@@ -7,7 +7,7 @@ WORKDIR /opt/cerealbot
 
 RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
-    apt-get install ffmpeg sqlite3 -y && \
+    apt-get install build-essential ffmpeg sqlite3 -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /opt/cerealbot
