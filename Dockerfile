@@ -7,15 +7,15 @@ WORKDIR /opt/cerealbot
 
 RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
-    apt-get install build-essential ffmpeg sqlite3 -y && \
+    apt-get install ffmpeg -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /opt/cerealbot
 
+RUN npm install --only=production
+
 RUN chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
-
-RUN npm install --only=production
 
 CMD npm start
