@@ -5,17 +5,17 @@ ENV BOT_TOKEN=""
 
 WORKDIR /opt/cerealbot
 
-COPY . /opt/cerealbot
-
 RUN useradd -ms /bin/bash cerealbot && \
     apt-get update -y && \
-    apt-get install ffmpeg -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    chown -R cerealbot /opt/cerealbot
+    apt-get install ffmpeg sqlite3 -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY . /opt/cerealbot
+
+RUN chown -R cerealbot /opt/cerealbot
 
 USER cerealbot
 
 RUN npm install --only=production
-RUN npm build
 
 CMD npm start
