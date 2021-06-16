@@ -8,7 +8,11 @@
         }
     },
     "DATABASE": {
-        "CONNECTION_STRING": "sqlite://data/database.sqlite"
+        "CLIENT": "sqlite3",
+        "NAME": "dev.database.sqlite",
+        "CONNECTION_STRING": "sqlite://dev.database.sqlite",
+        "DEBUG": true,
+        "USE_NULL_AS_DEFAULT": true
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
@@ -24,5 +28,9 @@
         "SEARCH_INGREDIENT": "v1/1/filter.php?i=",
         "SEARCH_LETTER_URL": "v1/1/search.php?f=",
         "SEARCH_URL": "v1/1/search.php?s="
+    },
+    "MEME": {
+        "SYNC_AT_MIDNIGHT": "0 0 * * *",
+        "TABLE_NAME": "meme"
     }
 }

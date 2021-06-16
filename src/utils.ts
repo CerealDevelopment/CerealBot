@@ -13,21 +13,6 @@ const findFilesWithEnding = (directory: string, endsWith: string): Array<string>
 };
 
 /**
- * Checks, if a string ends on one of the given endings
- * @param str - String to check the ending of
- * @param fileEndings - Set with all acceptable string endings
- * @returns - A boolean, that becomes true, if the string ends on the fileEnding Set
- */
-const resourceEndsWith = (str: string, fileEndings: Set<string>): boolean => {
-  const splitArray = str.split(".");
-  if (!splitArray.length || splitArray.length === 1) {
-    return false;
-  }
-  const urlEnd = splitArray[splitArray.length - 1];
-  return fileEndings.has(urlEnd);
-};
-
-/**
  * Generates a random integer from 0 to a set max value, while avoiding the last generated value.
  * @param maxValue - The max value of the random number.
  * @param lastNumber - The last random number that was created.
@@ -91,7 +76,6 @@ export {
   getRandomNumber,
   getCommandMap,
   CommandInterface,
-  resourceEndsWith,
   getCerealColor,
   trim,
 };

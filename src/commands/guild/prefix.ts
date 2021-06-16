@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import Keyv from "keyv";
 import { createError } from "../../utils";
 import { userPermissions } from "../../discordUserPermissions";
-import { DATABASE } from "../../../config.json";
+import { DB } from "../../../config.json";
 
 const getGuildPrefix = async (message: Message, guildPrefixes: Keyv): Promise<string> => {
   const guildId: string = message.guild.id;
@@ -43,7 +43,7 @@ module.exports = {
   neededUserPermissions: [userPermissions.administrator, userPermissions.manage_guild],
   usage: "<new Prefix> - has to be a length of 1. Keep in mind to choose a symbol makes using the bot easier.",
   async execute(message: Message, args: string[]) {
-    const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
+    const keyvGuildConfig: Keyv = new Keyv(DB.DEVELOPMENT.CONNECTION_STRING, {
       namespace: "guildConfig",
     });
     const [reply, error] = await dispatchPrefixFun(message, keyvGuildConfig, args);

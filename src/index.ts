@@ -1,9 +1,17 @@
 import { Client, Message } from "discord.js";
-import { DISCORD, DATABASE } from "../config.json";
+import { DISCORD, DATABASE, MEME } from "../config.json";
 import { CommandInterface, getCommandMap } from "./utils";
 import _ from "lodash";
 import Keyv from "keyv";
 import logger from "./logging";
+import cron from "node-cron";
+import {
+  fetchImgurResult,
+  removeAllMemeFromDatabase,
+  parseImgurResponseToArray,
+  addCollectionOfMemesToDatabase,
+  isMemeDatabaseEmpty,
+} from "./commands/meme/memeService";
 
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
@@ -24,7 +32,24 @@ const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });
 
-const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
+const clearAndSyncImgur = async () => {
+  console.log("Run sync job");
+  const imgurResults = await fetchImgurResult().then((result) => {
+    return parseImgurResponseToArray(result);
+  });
+
+  if (!_.isEmpty(imgurResults)) {
+    removeAllMemeFromDatabase();
+    addCollectionOfMemesToDatabase(imgurResults);
+  }
+};
+
+const executeCommand = (
+  message: Message,
+  prefix: string,
+  command: string,
+  args: string[]
+) => {
   const executable: CommandInterface = getCommandMap().get(command);
   if (executable !== undefined) {
     if (executable.neededUserPermissions !== undefined) {
@@ -49,7 +74,16 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
 };
 
 client.once("ready", () => {
-  logger.info("Time to get cereal!");
+  console.log("Time to get cereal!");
+  isMemeDatabaseEmpty().then((isEmpty) => {
+    if (isEmpty) {
+      clearAndSyncImgur();
+    }
+  });
+});
+
+cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
+  await clearAndSyncImgur();
 });
 
 client.on("message", async (message: Message) => {
