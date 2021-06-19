@@ -41,8 +41,21 @@ Current required items in config.json:
 
 ```json
 {
-  "BOT_TOKEN": "<Your token>",
-  "PREFIX": "<Your preferred command prefix like '!'  or '#'>"
+    "DISCORD": {
+        "PREFIX": "!",
+        "EMBED": {
+            "TITLE_CHAR_LIMIT": 256,
+            "DESC_CHAR_LIMIT": 2048
+        }
+    },
+    "DATABASE": {
+        "CONNECTION_STRING": "sqlite://database.sqlite"
+    },
+    "AUDIO_FILE_FORMAT": ".ogg",
+    "IMGUR": {
+        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
+        "AUTHORIZATION": "Client-ID <API_KEY>"
+    }
 }
 ```
 
