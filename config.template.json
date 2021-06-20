@@ -13,5 +13,12 @@
     "IMGUR": {
         "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
         "AUTHORIZATION": "Client-ID <API_KEY>"
+    },
+    "COCKTAIL": {
+        "BASE_URL": "https://www.thecocktaildb.com/api/json/",
+        "RANDOM_URL": "v1/1/random.php",
+        "SEARCH_URL": "v1/1/search.php?s=",
+        "SEARCH_LETTER_URL": "v1/1/search.php?f=",
+        "SEARCH_INGREDIENT": "v1/1/filter.php?i="
     }
 }
