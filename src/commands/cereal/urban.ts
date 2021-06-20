@@ -2,14 +2,12 @@ import { Message, MessageEmbed } from "discord.js";
 import querystring from "querystring";
 import fetch from "node-fetch";
 import { trim, getCerealColor } from "../../utils";
+import { URBAN } from "../../../config.json";
 
 const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });
 
-  const { list } = await fetch(
-    `https://api.urbandictionary.com/v0/define?${query}`,
-    {}
-  )
+  const { list } = await fetch(`${URBAN.URL}${query}`, {})
     .then((response) => response.json())
     .catch((e: Error) => {
       console.log(e);

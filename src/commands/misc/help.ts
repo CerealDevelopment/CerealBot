@@ -49,7 +49,7 @@ module.exports = {
   usage: "",
   async execute(message: Message, args: string[]) {
     const result = await getFormattedAnswer(args);
-    message.reply(`${result}`);
+    message.reply(result);
   },
   getFormattedAnswer,
 };
