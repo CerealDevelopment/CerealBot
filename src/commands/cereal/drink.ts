@@ -10,30 +10,26 @@ const dispatch = async (args: string[]): Promise<Drink | void> => {
   const base_url = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
   if (args.length === 0) {
     return await fetch_drinks(`${base_url}${COCKTAIL.RANDOM_URL}`)
-      .then((found_drinks) => select_drink_from_list(found_drinks))
-      .then((found_drink) => parse_object_to_drink(found_drink))
-      .catch((e) => console.log(e));
+      .then(found_drinks => select_drink_from_list(found_drinks))
+      .then(found_drink => parse_object_to_drink(found_drink))
+      .catch(e => console.log(e));
     // parse_object_to_drink(
     //   await fetch_drinks(`${base_url}${COCKTAIL.RANDOM_URL}`)["drinks"][0]
     // );
   } else if (args[0] === "-d" || args[0] === "--drink") {
     // TODO Factor out function
     // TODO handle if no drink is found
-    const search_for_drink: string = _.toLower(
-      _.join(_.takeRight(args, args.length - 2), "_")
-    );
-    return await fetch_drinks(
-      `${base_url}${COCKTAIL.SEARCH_URL}${search_for_drink}`
-    )
-      .then((found_drinks) => select_drink_from_list(found_drinks))
-      .then((found_drink) => parse_object_to_drink(found_drink))
-      .catch((e) => console.log(e));
+    const search_for_drink: string = _.toLower(_.join(_.takeRight(args, args.length - 2), "_"));
+    return await fetch_drinks(`${base_url}${COCKTAIL.SEARCH_URL}${search_for_drink}`)
+      .then(found_drinks => select_drink_from_list(found_drinks))
+      .then(found_drink => parse_object_to_drink(found_drink))
+      .catch(e => console.log(e));
   } else if (args[0] === "-s" || args[0] === "--starting") {
     const search_for_letter: string = args[1];
     return await fetch_drinks(`${base_url}${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`)
-      .then((found_drinks) => select_drink_from_list(found_drinks))
-      .then((found_drink) => parse_object_to_drink(found_drink))
-      .catch((e) => console.log(e));
+      .then(found_drinks => select_drink_from_list(found_drinks))
+      .then(found_drink => parse_object_to_drink(found_drink))
+      .catch(e => console.log(e));
   } else if (args[0] === "-i" || args[0] === "--ingredient") {
     //TODO dis
   }
@@ -41,7 +37,7 @@ const dispatch = async (args: string[]): Promise<Drink | void> => {
 
 const fetch_drinks = async (url: string): Promise<Object> => {
   const res = await fetch(url, {})
-    .then((response) => response.json())
+    .then(response => response.json())
     .catch((e: Error) => {
       console.log(e);
     });
@@ -49,10 +45,7 @@ const fetch_drinks = async (url: string): Promise<Object> => {
   return res;
 };
 
-const generate_fields_list = (
-  res: Object,
-  max_num: number = 16
-): Ingredient[] => {
+const generate_fields_list = (res: Object, max_num: number = 16): Ingredient[] => {
   const name_of_ingredients_field: string = "strIngredient";
   const name_of_measure_field: string = "strMeasure";
 
@@ -76,9 +69,7 @@ const generate_fields_list = (
   return ingredient_list;
 };
 
-const parse_measure = (
-  string: String
-): [string | null, string | null, string | null] => {
+const parse_measure = (string: String): [string | null, string | null, string | null] => {
   const result = string.split(" ");
   return [result[0] ?? null, result[1] ?? null, result[2] ?? null];
 };
@@ -102,25 +93,14 @@ const parse_object_to_drink = (drink_res: Object): Drink => {
 
   const ingredients = generate_fields_list(drink_res);
 
-  const drink = new Drink(
-    _.toInteger(id),
-    name,
-    category,
-    instructions,
-    thumb_nail,
-    glas,
-    ingredients,
-    picture
-  );
+  const drink = new Drink(_.toInteger(id), name, category, instructions, thumb_nail, glas, ingredients, picture);
   return drink;
 };
 
-const process_drink = async (
-  args: string[]
-): Promise<string | MessageEmbed> => {
+const process_drink = async (args: string[]): Promise<string | MessageEmbed> => {
   const result: Drink | void = await dispatch(args);
   if (result) {
-    const ingredients = result.ingredient.map((x) => x.toString()).join("\n");
+    const ingredients = result.ingredient.map(x => x.toString()).join("\n");
 
     const embed = new MessageEmbed()
       .setColor(getCerealColor())
@@ -147,8 +127,7 @@ module.exports = {
   name: "drink",
   description: "Get a drink randomly or by choice :beers: :tropical_drink:",
   hasArgs: false,
-  usage:
-    "-d --drink <drink> \n -s --starting <starting_letter> \n -i --ingredient <ingredient>",
+  usage: "-d --drink <drink> \n -s --starting <starting_letter> \n -i --ingredient <ingredient>",
   async execute(message: Message, args: string[]) {
     const result = await process_drink(args);
 

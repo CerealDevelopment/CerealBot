@@ -6,10 +6,7 @@ import config from "../../../config.json";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
-const airhornFiles: Array<string> = findFilesWithEnding(
-  pathToAirhornFiles,
-  config.AUDIO_FILE_FORMAT
-);
+const airhornFiles: Array<string> = findFilesWithEnding(pathToAirhornFiles, config.AUDIO_FILE_FORMAT);
 
 /**
  * Creates a new string without white spaces and all lower case letters
@@ -23,9 +20,7 @@ const removeAllWhiteSpacesAndToLower = (str: string): string => {
 const audioFileNames: Object = _.reduce(
   airhornFiles,
   (result, value) => {
-    const key = removeAllWhiteSpacesAndToLower(
-      _.replace(value, /(airhorn_)|(.ogg)/gi, "")
-    );
+    const key = removeAllWhiteSpacesAndToLower(_.replace(value, /(airhorn_)|(.ogg)/gi, ""));
     result[key] = value;
     return result;
   },
@@ -106,11 +101,7 @@ const playSpecificAudioFile = async (
     return;
   }
   const choice: string = removeAllWhiteSpacesAndToLower(_.join(args, "_"));
-  const audioFile: string = _.get(
-    audioFileNames,
-    choice,
-    "airhorn_default.ogg"
-  );
+  const audioFile: string = _.get(audioFileNames, choice, "airhorn_default.ogg");
   const chosenFile: string = `${pathToAudioFiles}/${audioFile}`;
 
   return playAudio(message, chosenFile);
@@ -156,10 +147,7 @@ const playRandomAirhorn = async (
     return 0;
   }
 
-  const chooseFileNumber: number = getRandomNumber(
-    audioFiles.length - 1,
-    lastIndexOfAudioFile
-  );
+  const chooseFileNumber: number = getRandomNumber(audioFiles.length - 1, lastIndexOfAudioFile);
   const chosenFile: string = `${pathToAudioFiles}/${audioFiles[chooseFileNumber]}`;
 
   await playAudio(message, chosenFile);
@@ -174,21 +162,11 @@ module.exports = {
   usage: "",
   async execute(message: Message, args: string[]) {
     if (_.isEmpty(args)) {
-      lastIndexOfAudioFile = await playRandomAirhorn(
-        message,
-        pathToAirhornFiles,
-        airhornFiles,
-        lastIndexOfAudioFile
-      );
+      lastIndexOfAudioFile = await playRandomAirhorn(message, pathToAirhornFiles, airhornFiles, lastIndexOfAudioFile);
     } else if (args[0] === "help") {
       await printAirhornHelp(message, audioFileNames);
     } else {
-      await playSpecificAudioFile(
-        message,
-        pathToAirhornFiles,
-        audioFileNames,
-        args
-      );
+      await playSpecificAudioFile(message, pathToAirhornFiles, audioFileNames, args);
     }
   },
 };

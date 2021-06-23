@@ -1,9 +1,5 @@
 import fs from "fs";
-import {
-  findFilesWithEnding,
-  getRandomNumber,
-  getCommandMap,
-} from "../lib/utils";
+import { findFilesWithEnding, getRandomNumber, getCommandMap } from "../lib/utils";
 
 test("find files ending .md", () => {
   expect(findFilesWithEnding(".", ".md")).toEqual(["README.md"]);
@@ -32,6 +28,6 @@ function numberGenerator() {
   return output;
 }
 
-test.each(numberGenerator())("%i should not be equal the last number", (n) => {
+test.each(numberGenerator())("%i should not be equal the last number", n => {
   expect(getRandomNumber(maxValue, n)).not.toBe(n);
 });

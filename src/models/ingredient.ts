@@ -4,12 +4,7 @@ class Ingredient {
   scale: string;
   special: string;
 
-  constructor(
-    name: string,
-    amount: string | null,
-    scale: string | null,
-    special: string | null
-  ) {
+  constructor(name: string, amount: string | null, scale: string | null, special: string | null) {
     this.name = name;
     this.amount = amount ?? "";
     this.scale = scale ?? "";

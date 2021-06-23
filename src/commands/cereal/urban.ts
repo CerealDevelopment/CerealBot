@@ -8,7 +8,7 @@ const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });
 
   const { list } = await fetch(`${URBAN.URL}${query}`, {})
-    .then((response) => response.json())
+    .then(response => response.json())
     .catch((e: Error) => {
       console.log(e);
     });
