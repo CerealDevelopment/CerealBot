@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { CommandInterface, getCommandMap } from "../../utils";
 import config from "../../../config.json";
 
-const prefix: string = config.PREFIX ? config.PREFIX : "!";
+const prefix: string = config.DISCORD.PREFIX ? config.DISCORD.PREFIX : "!";
 
 const getFormattedAnswer = async (args: string[]): Promise<string> => {
   if (!args.length) {
