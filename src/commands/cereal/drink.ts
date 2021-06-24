@@ -1,38 +1,31 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import _ from "lodash";
-import { getCerealColor, trim, getRandomNumber } from "../../utils";
+import { getCerealColor, trim, getRandomNumber, createError } from "../../utils";
 import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
 
 const dispatch = async (args: string[]): Promise<Drink | void> => {
   const base_url = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
+  let drink_url = base_url;
   if (args.length === 0) {
-    return await fetch_drinks(`${base_url}${COCKTAIL.RANDOM_URL}`)
-      .then(found_drinks => select_drink_from_list(found_drinks))
-      .then(found_drink => parse_object_to_drink(found_drink))
-      .catch(e => console.log(e));
-    // parse_object_to_drink(
-    //   await fetch_drinks(`${base_url}${COCKTAIL.RANDOM_URL}`)["drinks"][0]
-    // );
-  } else if (args[0] === "-d" || args[0] === "--drink") {
-    // TODO Factor out function
-    // TODO handle if no drink is found
-    const search_for_drink: string = _.toLower(_.join(_.takeRight(args, args.length - 2), "_"));
-    return await fetch_drinks(`${base_url}${COCKTAIL.SEARCH_URL}${search_for_drink}`)
-      .then(found_drinks => select_drink_from_list(found_drinks))
-      .then(found_drink => parse_object_to_drink(found_drink))
-      .catch(e => console.log(e));
-  } else if (args[0] === "-s" || args[0] === "--starting") {
+    drink_url += COCKTAIL.RANDOM_URL;
+  } else if (_.includes(["-d", "--drink"], args[0])) {
+    const search_for_drink: string = _.toLower(_.join(args.slice(1), "_"));
+    drink_url += `${COCKTAIL.SEARCH_URL}${search_for_drink}`;
+  } else if (_.includes(["-s", "--starting"], args[0])) {
     const search_for_letter: string = args[1];
-    return await fetch_drinks(`${base_url}${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`)
-      .then(found_drinks => select_drink_from_list(found_drinks))
-      .then(found_drink => parse_object_to_drink(found_drink))
-      .catch(e => console.log(e));
-  } else if (args[0] === "-i" || args[0] === "--ingredient") {
-    //TODO dis
+    drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
   }
+  return mix_drink(drink_url);
+};
+
+const mix_drink = async (url: string): Promise<Drink | void> => {
+  return await fetch_drinks(url)
+    .then(select_drink_from_list)
+    .then(parse_object_to_drink)
+    .catch(e => console.log(`Error for: ${url}\n${e}`));
 };
 
 const fetch_drinks = async (url: string): Promise<Object> => {
@@ -74,12 +67,16 @@ const parse_measure = (string: String): [string | null, string | null, string | 
   return [result[0] ?? null, result[1] ?? null, result[2] ?? null];
 };
 
-const select_drink_from_list = (res: Object): Object => {
+const select_drink_from_list = async (res: Object): Promise<Object> => {
   const drink_list_res: Object[] = res["drinks"];
-  const number_of_drinks: number = drink_list_res.length - 1;
-  const drink_number: number = getRandomNumber(number_of_drinks, -1);
+  if (drink_list_res.length != 0) {
+    const number_of_drinks: number = drink_list_res.length - 1;
+    const drink_number: number = getRandomNumber(number_of_drinks, -1);
 
-  return drink_list_res[drink_number];
+    return drink_list_res[drink_number];
+  } else {
+    throw new Error("No drink was found");
+  }
 };
 
 const parse_object_to_drink = (drink_res: Object): Drink => {
@@ -100,7 +97,7 @@ const parse_object_to_drink = (drink_res: Object): Drink => {
 const process_drink = async (args: string[]): Promise<string | MessageEmbed> => {
   const result: Drink | void = await dispatch(args);
   if (result) {
-    const ingredients = result.ingredient.map(x => x.toString()).join("\n");
+    const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
 
     const embed = new MessageEmbed()
       .setColor(getCerealColor())
@@ -127,10 +124,12 @@ module.exports = {
   name: "drink",
   description: "Get a drink randomly or by choice :beers: :tropical_drink:",
   hasArgs: false,
-  usage: "-d --drink <drink> \n -s --starting <starting_letter> \n -i --ingredient <ingredient>",
+  usage: "-d --drink <drink>\n-s --starting <starting_letter>",
   async execute(message: Message, args: string[]) {
     const result = await process_drink(args);
 
     message.channel.send(result);
   },
+  generate_fields_list,
+  select_drink_from_list,
 };
