@@ -5,15 +5,16 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-    "build": "babel src -d lib --extensions \".ts\"",
+    "build": "npm run-script pretty && babel src -d lib --extensions \".ts\"",
     "start": "node ./lib/index.js",
-    "pretty": "npx prettier --write \"./src\" \"./tests\"",
+    "build-and-start": "npm run-script build && npm run-script start",
+    "pretty": "npx prettier --print-width 120 --arrow-parens avoid --write \"./src\" \"./tests\"",
     "clean": "rm -rf node_modules lib",
     "clean-install": "npm run-script clean && npm install",
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "npm run-script build && docker build --tag cerealdevelopment/cerealbot:latest .",
     "docker-push": "docker push cerealdevelopment/cerealbot:latest",
-    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/database.sqlite:/opt/cerealbot/database.sqlite -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest"
+    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "keyv": "^4.0.3",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
+    "opusscript": "^0.0.8",
     "require": "^2.4.20",
     "sqlite3": "^4.1.1"
   },

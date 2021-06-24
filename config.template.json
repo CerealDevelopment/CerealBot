@@ -8,7 +8,7 @@
         }
     },
     "DATABASE": {
-        "CONNECTION_STRING": "sqlite://database.sqlite"
+        "CONNECTION_STRING": "sqlite://data/database.sqlite"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
