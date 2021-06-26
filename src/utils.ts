@@ -8,11 +8,8 @@ import _ from "lodash";
  * @param endsWith - The file ending to find.
  * @returns - An array consisting of the file names.
  */
-const findFilesWithEnding = (
-  directory: string,
-  endsWith: string
-): Array<string> => {
-  return fs.readdirSync(directory).filter((file) => file.endsWith(endsWith));
+const findFilesWithEnding = (directory: string, endsWith: string): Array<string> => {
+  return fs.readdirSync(directory).filter(file => file.endsWith(endsWith));
 };
 
 /**
@@ -58,10 +55,7 @@ const commandMap = (() => {
 
   const commandFolders = fs.readdirSync("lib/commands");
   for (const folder of commandFolders) {
-    const commandFiles: Array<string> = findFilesWithEnding(
-      `lib/commands/${folder}`,
-      ".js"
-    );
+    const commandFiles: Array<string> = findFilesWithEnding(`lib/commands/${folder}`, ".js");
     for (const file of commandFiles) {
       const command = require(`./commands/${folder}/${file}`);
       collection.set(command.name, command);
@@ -90,9 +84,7 @@ const trim = (str: string, max: number): string => {
  * @returns An error object
  */
 const createError = (message: Message, errorMessage: string): Error => {
-  return Error(
-    `Guild: ${message.guild.id}, Member: ${message.author}, Msg: ${errorMessage}`
-  );
+  return Error(`Guild: ${message.guild.id}, Member: ${message.author}, Msg: ${errorMessage}`);
 };
 
 interface CommandInterface {

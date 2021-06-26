@@ -7,9 +7,7 @@ import Keyv from "keyv";
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
-const BOT_TOKEN: string = process.env.BOT_TOKEN
-  ? process.env.BOT_TOKEN
-  : DISCORD.BOT_TOKEN;
+const BOT_TOKEN: string = process.env.BOT_TOKEN ? process.env.BOT_TOKEN : DISCORD.BOT_TOKEN;
 
 if (!BOT_TOKEN) {
   console.log("The 'BOT_TOKEN' is missing.");
@@ -32,12 +30,7 @@ const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });
 
-const executeCommand = (
-  message: Message,
-  prefix: string,
-  command: string,
-  args: string[]
-) => {
+const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
   const executable: CommandInterface = getCommandMap().get(command);
   if (executable !== undefined) {
     if (executable.neededUserPermissions !== undefined) {
@@ -66,9 +59,7 @@ client.once("ready", () => {
 });
 
 client.on("message", async (message: Message) => {
-  const guildPrefix: string | undefined = await keyvGuildConfig.get(
-    message.guild.id
-  );
+  const guildPrefix: string | undefined = await keyvGuildConfig.get(message.guild.id);
   const prefix: string = guildPrefix ? guildPrefix : globalPrefix;
 
   if (!message.content.startsWith(prefix) || message.author.bot) {
@@ -80,13 +71,7 @@ client.on("message", async (message: Message) => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLocaleLowerCase();
-  const executedCommand = _.attempt(
-    executeCommand,
-    message,
-    prefix,
-    command,
-    args
-  );
+  const executedCommand = _.attempt(executeCommand, message, prefix, command, args);
 
   if (_.isError(executedCommand)) {
     console.error(executedCommand);

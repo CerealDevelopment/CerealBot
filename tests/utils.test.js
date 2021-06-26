@@ -1,19 +1,15 @@
 import fs from "fs";
-import {
-  findFilesWithEnding,
-  getRandomNumber,
-  getCommandMap,
-} from "../lib/utils";
+import { findFilesWithEnding, getRandomNumber, getCommandMap } from "../lib/utils";
 
-test("find files ending .md", () => {
+it("find files ending .md", () => {
   expect(findFilesWithEnding(".", ".md")).toEqual(["README.md"]);
 });
 
-test("find files ending .exe", () => {
+it("find files ending .exe", () => {
   expect(findFilesWithEnding(".", ".exe")).toEqual([]);
 });
 
-test("size of command map", () => {
+it("size of command map", () => {
   const commandFolders = fs.readdirSync("lib/commands");
   let files = [];
   for (const folder of commandFolders) {
@@ -23,8 +19,7 @@ test("size of command map", () => {
   expect(getCommandMap().size).toBe(expectedSize);
 });
 
-const maxValue = 100;
-function numberGenerator() {
+function numberGenerator(maxValue = 100) {
   let output = [];
   for (let i = 0; i < 500; i++) {
     output.push(Math.floor(Math.random() * maxValue));
@@ -32,6 +27,11 @@ function numberGenerator() {
   return output;
 }
 
-test.each(numberGenerator())("%i should not be equal the last number", (n) => {
-  expect(getRandomNumber(maxValue, n)).not.toBe(n);
+const maxValue = 100;
+it.each(numberGenerator(maxValue))("%i should not be equal the last number", n => {
+  const result = getRandomNumber(maxValue, n);
+  expect(result).toBeDefined();
+  expect(result).toBeLessThanOrEqual(maxValue);
+  expect(result).toBeGreaterThanOrEqual(0);
+  expect(result).not.toBe(n);
 });

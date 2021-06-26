@@ -1,11 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
-import {
-  resourceEndsWith,
-  getCerealColor,
-  getRandomNumber,
-  trim,
-} from "../../utils";
+import { resourceEndsWith, getCerealColor, getRandomNumber, trim } from "../../utils";
 import _ from "lodash";
 import { IMGUR, DISCORD } from "../../../config.json";
 
@@ -28,22 +23,18 @@ class ImgurImageEntry {
 const imageEnding: Set<string> = new Set(["jpg", "png"]);
 
 const handleImgurResult = (result: JSON): Array<ImgurImageEntry> => {
-  const imgurResults: Array<ImgurImageEntry> = _.flatMap(
-    result["data"]["items"],
-    (item: JSON) => {
-      if (item["is_album"]) {
-        return _.map(item["images"], createNewEntry);
-      } else {
-        return createNewEntry(item);
-      }
+  const imgurResults: Array<ImgurImageEntry> = _.flatMap(result["data"]["items"], (item: JSON) => {
+    if (item["is_album"]) {
+      return _.map(item["images"], createNewEntry);
+    } else {
+      return createNewEntry(item);
     }
-  );
+  });
   return _.compact(imgurResults);
 };
 
 const createNewEntry = (json: JSON): ImgurImageEntry | null => {
-  if (resourceEndsWith(json["link"], imageEnding))
-    return new ImgurImageEntry(json);
+  if (resourceEndsWith(json["link"], imageEnding)) return new ImgurImageEntry(json);
   else return null;
 };
 
@@ -60,11 +51,10 @@ const createMessageEmbed = (imgurObject: ImgurImageEntry): MessageEmbed => {
 
 const fetchImgurResult = async (): Promise<string | MessageEmbed> => {
   const imgurResult = await fetch(IMGUR.URL, { headers: headers })
-    .then((response) => response.json())
+    .then(response => response.json())
     .catch((error: Error) => console.error(error));
   const imgurObjectLinks = handleImgurResult(imgurResult);
-  const randomImgurObject =
-    imgurObjectLinks[getRandomNumber(imgurObjectLinks.length - 1)];
+  const randomImgurObject = imgurObjectLinks[getRandomNumber(imgurObjectLinks.length - 1)];
   return createMessageEmbed(randomImgurObject);
 };
 

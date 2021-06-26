@@ -2,16 +2,27 @@
     "DISCORD": {
         "PREFIX": "!",
         "EMBED": {
-            "TITLE_CHAR_LIMIT": 256,
-            "DESC_CHAR_LIMIT": 2048
+            "DESC_CHAR_LIMIT": 2048,
+            "FIELD_CHAR_LIMIT": 1024,
+            "TITLE_CHAR_LIMIT": 256
         }
     },
     "DATABASE": {
-        "CONNECTION_STRING": "sqlite://database.sqlite"
+        "CONNECTION_STRING": "sqlite://data/database.sqlite"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
-        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
-        "AUTHORIZATION": "Client-ID <API_KEY>"
+        "AUTHORIZATION": "Client-ID <API_KEY>",
+        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1"
+    }, 
+    "URBAN": {
+        "URL": "https://api.urbandictionary.com/v0/define?"
+    },
+    "COCKTAIL": {
+        "BASE_URL": "https://www.thecocktaildb.com/api/json/",
+        "RANDOM_URL": "v1/1/random.php",
+        "SEARCH_INGREDIENT": "v1/1/filter.php?i=",
+        "SEARCH_LETTER_URL": "v1/1/search.php?f=",
+        "SEARCH_URL": "v1/1/search.php?s="
     }
 }
