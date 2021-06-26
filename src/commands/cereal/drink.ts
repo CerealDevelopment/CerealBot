@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import _ from "lodash";
-import { getCerealColor, trim, getRandomNumber, createError } from "../../utils";
+import { getCerealColor, trim, getRandomNumber } from "../../utils";
 import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
