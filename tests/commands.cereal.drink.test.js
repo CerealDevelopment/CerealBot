@@ -95,6 +95,7 @@ it("select first drink", async () => {
   expect(result).toBe(one_drink.drinks[0]);
 });
 
+const error_message = "No drink was found"
 const empty_drinks = { drinks: [] };
 it("reject promise, because of empty array", async () => {
   expect.assertions(1);
@@ -102,7 +103,7 @@ it("reject promise, because of empty array", async () => {
     const result = await selectDrinkFromList(empty_drinks);
     console.log(result);
   } catch (e) {
-    expect(e.message).toEqual("No drink was found");
+    expect(e.message).toEqual(error_message);
   }
 });
 
@@ -113,6 +114,6 @@ it("reject promise, because of undefined", async () => {
     const result = await selectDrinkFromList(undefined_drinks);
     console.log(result);
   } catch (e) {
-    expect(e.message).toEqual("No drink was found");
+    expect(e.message).toEqual(error_message);
   }
 });
