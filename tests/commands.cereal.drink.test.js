@@ -1,4 +1,7 @@
-import { generate_fields_list, select_drink_from_list } from "../lib/commands/cereal/drink";
+import {
+  generate_fields_list as generateFieldsList,
+  select_drink_from_list as selectDrinkFromList,
+} from "../lib/commands/cereal/drink";
 import { compact, join, min, max, shuffle, random } from "lodash";
 
 const test_drink = {
@@ -59,7 +62,7 @@ const test_drink = {
 };
 
 let i = 0;
-it.each(generate_fields_list(test_drink))("generate_field_list should have 5 specific ingredients", n => {
+it.each(generateFieldsList(test_drink))("generate_field_list should have 5 specific ingredients", n => {
   i += 1;
   expect(n).toBeDefined;
   expect(n.name).toBe(test_drink[`strIngredient${i}`]);
@@ -70,26 +73,44 @@ it.each(generate_fields_list(test_drink))("generate_field_list should have 5 spe
 });
 
 it("generate_field_list finds 5 ingredients", () => {
-  const result = generate_fields_list(test_drink);
+  const result = generateFieldsList(test_drink);
   expect(result).toBeDefined;
   expect(result).toHaveLength(5);
 });
 
-
 const drinks = { drinks: shuffle(Array.from(Array(random(1, 10000, false)).keys())) };
 it("select a random drink", async () => {
-  const result = await select_drink_from_list(drinks);
+  const result = await selectDrinkFromList(drinks);
   expect(result).toBeDefined;
   expect(result).toBeTruthy;
   expect(result).toBeLessThanOrEqual(max(drinks.drinks));
   expect(result).toBeGreaterThanOrEqual(min(drinks.drinks));
 });
 
+const one_drink = { drinks: [1] };
+it("select first drink", async () => {
+  const result = await selectDrinkFromList(one_drink);
+  expect(result).toBeDefined;
+  expect(result).toBeTruthy;
+  expect(result).toBe(one_drink.drinks[0]);
+});
+
 const empty_drinks = { drinks: [] };
 it("reject promise, because of empty array", async () => {
   expect.assertions(1);
   try {
-    const result = await select_drink_from_list(empty_drinks);
+    const result = await selectDrinkFromList(empty_drinks);
+    console.log(result);
+  } catch (e) {
+    expect(e.message).toEqual("No drink was found");
+  }
+});
+
+const undefined_drinks = undefined;
+it("reject promise, because of undefined", async () => {
+  expect.assertions(1);
+  try {
+    const result = await selectDrinkFromList(undefined_drinks);
     console.log(result);
   } catch (e) {
     expect(e.message).toEqual("No drink was found");
