@@ -4,6 +4,8 @@
 
 [![Node.js CI](https://github.com/CerealDevelopment/CerealBot/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/CerealDevelopment/CerealBot/actions/workflows/main.yml)
 [![Docker CI](https://github.com/CerealDevelopment/CerealBot/actions/workflows/docker.yml/badge.svg?branch=master)](https://github.com/CerealDevelopment/CerealBot/actions/workflows/docker.yml)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/CerealDevelopment/CerealBot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CerealDevelopment/CerealBot/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/CerealDevelopment/CerealBot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CerealDevelopment/CerealBot/alerts/)
 
 A Discord Bot for memes, airhorn noises and even more cereal things!
 
