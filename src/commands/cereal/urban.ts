@@ -47,7 +47,7 @@ module.exports = {
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
     const result = await urban(args).catch(e => {
-      console.error(e)
+      console.error(e);
       return `No results found for **${args.join(" ")}**.`;
     });
 
