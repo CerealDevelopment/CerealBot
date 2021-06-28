@@ -6,7 +6,7 @@ import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
 
-const dispatch = async (args: string[]): Promise<Drink | void> => {
+const dispatch = async (args: string[]): Promise<Drink> => {
   const baseUrl = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
   let drink_url = baseUrl;
   if (args.length === 0) {
@@ -21,20 +21,12 @@ const dispatch = async (args: string[]): Promise<Drink | void> => {
   return mix_drink(drink_url);
 };
 
-const mix_drink = async (url: string): Promise<Drink | void> => {
-  return await fetchDrinks(url)
-    .then(selectDrinkFromList)
-    .then(parseObjectToDrink)
-    .catch(e => console.log(`Error for: ${url}\n${e}`));
+const mix_drink = async (url: string): Promise<Drink> => {
+  return await fetchDrinks(url).then(selectDrinkFromList).then(parseObjectToDrink);
 };
 
 const fetchDrinks = async (url: string): Promise<Object> => {
-  const res = await fetch(url, {})
-    .then(response => response.json())
-    .catch((e: Error) => {
-      console.log(e);
-    });
-
+  const res = await fetch(url, {}).then(response => response.json());
   return res;
 };
 
@@ -99,29 +91,25 @@ const parseObjectToDrink = (drink_res: Object): Drink => {
 };
 
 const processDrink = async (args: string[]): Promise<string | MessageEmbed> => {
-  const result: Drink | void = await dispatch(args);
-  if (result) {
-    const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
+  const result: Drink = await dispatch(args);
+  const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
 
-    const embed = new MessageEmbed()
-      .setColor(getCerealColor())
-      .setTitle(result.name)
-      .setDescription(result.category)
-      .setThumbnail(result.thumb_nail)
-      .addFields(
-        {
-          name: "Ingredients",
-          value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-        },
-        {
-          name: "Instructions",
-          value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-        }
-      );
-    return embed;
-  } else {
-    return "404 Drink not found";
-  }
+  const embed = new MessageEmbed()
+    .setColor(getCerealColor())
+    .setTitle(result.name)
+    .setDescription(result.category)
+    .setThumbnail(result.thumb_nail)
+    .addFields(
+      {
+        name: "Ingredients",
+        value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+      },
+      {
+        name: "Instructions",
+        value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+      }
+    );
+  return embed;
 };
 
 module.exports = {
@@ -130,7 +118,10 @@ module.exports = {
   hasArgs: false,
   usage: "<drink> | <starting_letter>",
   async execute(message: Message, args: string[]) {
-    const result = await processDrink(args);
+    const result = await processDrink(args).catch(e => {
+      console.error(e);
+      return "404 Drink not found";
+    });
 
     message.channel.send(result);
   },

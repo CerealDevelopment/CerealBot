@@ -95,7 +95,7 @@ it("select first drink", async () => {
   expect(result).toBe(one_drink.drinks[0]);
 });
 
-const error_message = "No drink was found"
+const error_message = "No drink was found";
 const empty_drinks = { drinks: [] };
 it("reject promise, because of empty array", async () => {
   expect.assertions(1);
