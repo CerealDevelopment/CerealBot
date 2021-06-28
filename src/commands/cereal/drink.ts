@@ -72,7 +72,8 @@ const selectDrinkFromList = async (res: Object): Promise<Object> => {
       return drink_list_res[drink_number];
     }
   }
-  throw new Error("No drink was found");
+
+  throw new Error("No drink was found in API response");
 };
 
 const parseObjectToDrink = (drink_res: Object): Drink => {
