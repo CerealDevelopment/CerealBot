@@ -4,14 +4,15 @@ import fetch from "node-fetch";
 import { trim, getCerealColor } from "../../utils";
 import { URBAN, DISCORD } from "../../../config.json";
 
+const fetchUrban = async (url: string): Promise<any> => {
+  const res = await fetch(url, {}).then(response => response.json());
+  return res;
+};
+
 const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   const query = querystring.stringify({ term: args.join(" ") });
 
-  const { list } = await fetch(`${URBAN.URL}${query}`, {})
-    .then(response => response.json())
-    .catch((e: Error) => {
-      console.log(e);
-    });
+  const { list } = await fetchUrban(`${URBAN.URL}${query}`);
 
   if (!list.length) {
     return `No results found for **${args.join(" ")}**.`;
@@ -45,7 +46,10 @@ module.exports = {
   hasArgs: true,
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
-    const result = await urban(args);
+    const result = await urban(args).catch(e => {
+      console.error(e)
+      return `No results found for **${args.join(" ")}**.`;
+    });
 
     message.channel.send(result);
   },
