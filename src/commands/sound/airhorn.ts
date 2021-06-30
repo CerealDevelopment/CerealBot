@@ -3,6 +3,7 @@ import _ from "lodash";
 import { Message, VoiceConnection } from "discord.js";
 import { findFilesWithEnding, getRandomNumber } from "../../utils";
 import config from "../../../config.json";
+import logger from "../../logging";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
@@ -46,17 +47,17 @@ const playAudio = async (message: Message, chosenFile: string) => {
   });
 
   dispatcher.on("start", () => {
-    console.log(`${chosenFile} is now playing!`);
+    logger.info(`${chosenFile} is now playing!`);
   });
 
   dispatcher.on("finish", () => {
-    console.log(`${chosenFile} has finished playing!`);
+    logger.info(`${chosenFile} has finished playing!`);
     dispatcher.destroy();
     connection.disconnect();
   });
 
-  dispatcher.on("error", console.error);
-  connection.on("error", console.error);
+  dispatcher.on("error", logger.error);
+  connection.on("error", logger.error);
 };
 
 const checkAudioFiles = (numberOfAudioFiles: number) => {
@@ -154,7 +155,7 @@ module.exports = {
   usage: "",
   async execute(message: Message, args: string[]) {
     const result = await playAirhorn(message, args).catch((e: Error) => {
-      console.error(e);
+      logger.error(e);
       if (e.message === "No sound files are found for Airhorn") {
         return "The Airhorns were stolen :fearful:";
       } else if (e.message === `The user "${message.author.id}" was not in a channel`) {

@@ -3,23 +3,17 @@ import { DISCORD, DATABASE } from "../config.json";
 import { CommandInterface, getCommandMap } from "./utils";
 import _ from "lodash";
 import Keyv from "keyv";
+import logger from "./logging";
 
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
 const BOT_TOKEN: string = process.env.BOT_TOKEN ? process.env.BOT_TOKEN : DISCORD.BOT_TOKEN;
 
-if (!BOT_TOKEN) {
-  console.log("The 'BOT_TOKEN' is missing.");
+client.login(BOT_TOKEN).catch((e: Error) => {
+  logger.error(`The 'BOT_TOKEN' is missing.\n${e}`);
   process.exit(1);
-}
-
-try {
-  client.login(BOT_TOKEN);
-} catch (error) {
-  console.log(error);
-  process.exit(1);
-}
+});
 
 const checkRights = (message: Message, rights): boolean => {
   const user = message.member;
@@ -37,7 +31,7 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
       if (executable.neededUserPermissions.length != 0) {
         if (!checkRights(message, executable.neededUserPermissions)) {
           message.channel.send("You are not allowed to run the command");
-          return Error();
+          throw Error(); //TODO add user name and command to log
         }
       }
     }
@@ -55,7 +49,7 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
 };
 
 client.once("ready", () => {
-  console.log("Time to get cereal!");
+  logger.info("Time to get cereal!");
 });
 
 client.on("message", async (message: Message) => {
@@ -74,7 +68,7 @@ client.on("message", async (message: Message) => {
   const executedCommand = _.attempt(executeCommand, message, prefix, command, args);
 
   if (_.isError(executedCommand)) {
-    console.error(executedCommand);
+    logger.error(executedCommand);
     message.reply(
       `I'm sorry, but your command is unknown. Please type \`${prefix}help\` for a list of all featured commands.`
     );
