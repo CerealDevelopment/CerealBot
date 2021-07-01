@@ -3,22 +3,32 @@ import querystring from "querystring";
 import fetch from "node-fetch";
 import { trim, getCerealColor } from "../../utils";
 import { URBAN, DISCORD } from "../../../config.json";
+import logger from "../../logging";
 
-const fetchUrban = async (url: string): Promise<any> => {
-  const res = await fetch(url, {}).then(response => response.json());
-  return res;
+const buildUrbanUrl = async (args: string[]): Promise<string> => {
+  const query = querystring.stringify({ term: args.join(" ") });
+  return `${URBAN.URL}${query}`;
 };
 
-const urban = async (args: string[]): Promise<string | MessageEmbed> => {
-  const query = querystring.stringify({ term: args.join(" ") });
+const fetchUrban = async (url: string): Promise<any> => {
+  const { list } = await fetch(url, {}).then(response => response.json());
+  return list;
+};
 
-  const { list } = await fetchUrban(`${URBAN.URL}${query}`);
-
-  if (!list.length) {
-    return `No results found for **${args.join(" ")}**.`;
+const checkResponse = (list: any[]): any[] => {
+  if (list.length) {
+    return list;
+  } else {
+    throw new Error("Response is empty");
   }
+};
 
+const getAnswer = (list: any[]): any => {
   const [answer] = list;
+  return answer;
+};
+
+const buildEmbed = async (answer: any): Promise<MessageEmbed> => {
   const embed = new MessageEmbed()
     .setColor(getCerealColor())
     .setTitle(answer.word)
@@ -40,6 +50,10 @@ const urban = async (args: string[]): Promise<string | MessageEmbed> => {
   return embed;
 };
 
+const urban = async (args: string[]): Promise<MessageEmbed> => {
+  return await buildUrbanUrl(args).then(fetchUrban).then(checkResponse).then(getAnswer).then(buildEmbed);
+};
+
 module.exports = {
   name: "urban",
   description: "Ask the urban dictionary",
@@ -47,7 +61,7 @@ module.exports = {
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
     const result = await urban(args).catch(e => {
-      console.error(e);
+      logger.error(e);
       return `No results found for **${args.join(" ")}**.`;
     });
 
