@@ -1,7 +1,4 @@
-import {
-  generate_fields_list as generateFieldsList,
-  select_drink_from_list as selectDrinkFromList,
-} from "../lib/commands/cereal/drink";
+import { parseIngredientsFieldsList, selectDrinkFromList } from "../lib/commands/cereal/drink";
 import { compact, join, min, max, shuffle, random } from "lodash";
 
 const test_drink = {
@@ -62,7 +59,7 @@ const test_drink = {
 };
 
 let i = 0;
-it.each(generateFieldsList(test_drink))("generate_field_list should have 5 specific ingredients", n => {
+it.each(parseIngredientsFieldsList(test_drink))("generate_field_list should have 5 specific ingredients", n => {
   i += 1;
   expect(n).toBeDefined;
   expect(n.name).toBe(test_drink[`strIngredient${i}`]);
@@ -73,7 +70,7 @@ it.each(generateFieldsList(test_drink))("generate_field_list should have 5 speci
 });
 
 it("generate_field_list finds 5 ingredients", () => {
-  const result = generateFieldsList(test_drink);
+  const result = parseIngredientsFieldsList(test_drink);
   expect(result).toBeDefined;
   expect(result).toHaveLength(5);
 });

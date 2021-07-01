@@ -5,32 +5,19 @@ import { getCerealColor, trim, getRandomNumber } from "../../utils";
 import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
-
-const dispatch = async (args: string[]): Promise<Drink> => {
-  const baseUrl = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
-  let drink_url = baseUrl;
-  if (args.length === 0) {
-    drink_url += COCKTAIL.RANDOM_URL;
-  } else if (args[0].length === 1) {
-    const search_for_letter: string = args[0];
-    drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
-  } else {
-    const search_for_drink: string = _.toLower(_.join(args, "_"));
-    drink_url += `${COCKTAIL.SEARCH_URL}${search_for_drink}`;
-  }
-  return mix_drink(drink_url);
-};
-
-const mix_drink = async (url: string): Promise<Drink> => {
-  return await fetchDrinks(url).then(selectDrinkFromList).then(parseObjectToDrink);
-};
+import logger from "../../logging";
 
 const fetchDrinks = async (url: string): Promise<Object> => {
-  const res = await fetch(url, {}).then(response => response.json());
-  return res;
+  return await fetch(url, {}).then(response => response.json());
 };
 
-const generateFieldsList = (res: Object, max_num: number = 16): Ingredient[] => {
+/**
+ * Parsing the Ingredients from JSON to an Ingredients array
+ * @param res - Response Drink JSON Object
+ * @param max_num - Maximum number of Ingredients
+ * @returns A parsed array of Ingredients
+ */
+const parseIngredientsFieldsList = (res: Object, max_num: number = 16): Ingredient[] => {
   const nameOfIngredientsField: string = "strIngredient";
   const nameOfMeasureField: string = "strMeasure";
 
@@ -54,11 +41,21 @@ const generateFieldsList = (res: Object, max_num: number = 16): Ingredient[] => 
   return ingredientList;
 };
 
+/**
+ * Parsing the measurements of ingredients
+ * @param string - The string of the measurements
+ * @returns An array with the measurements
+ */
 const parseMeasure = (string: String): [string | null, string | null, string | null] => {
   const result = string.split(" ");
   return [result[0] ?? null, result[1] ?? null, result[2] ?? null];
 };
 
+/**
+ * Select a drink JSON from an array
+ * @param res - Response with JSON array
+ * @returns One drink JSON
+ */
 const selectDrinkFromList = async (res: Object): Promise<Object> => {
   if (!_.isUndefined(res)) {
     const drink_list_res: Object[] = res["drinks"];
@@ -76,6 +73,11 @@ const selectDrinkFromList = async (res: Object): Promise<Object> => {
   throw new Error("No drink was found in API response");
 };
 
+/**
+ * Parse a JSON object to Drink
+ * @param drink_res - JSON object to parse
+ * @returns The Drink object
+ */
 const parseObjectToDrink = (drink_res: Object): Drink => {
   const id = drink_res["idDrink"];
   const name = drink_res["strDrink"];
@@ -85,14 +87,13 @@ const parseObjectToDrink = (drink_res: Object): Drink => {
   const glas = drink_res["strGlass"];
   const picture = drink_res["strImageSource"];
 
-  const ingredients = generateFieldsList(drink_res);
+  const ingredients = parseIngredientsFieldsList(drink_res);
 
   const drink = new Drink(_.toInteger(id), name, category, instructions, thumb_nail, glas, ingredients, picture);
   return drink;
 };
 
-const processDrink = async (args: string[]): Promise<string | MessageEmbed> => {
-  const result: Drink = await dispatch(args);
+const createDrinkEmbed = async (result: Drink): Promise<MessageEmbed> => {
   const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
 
   const embed = new MessageEmbed()
@@ -113,19 +114,38 @@ const processDrink = async (args: string[]): Promise<string | MessageEmbed> => {
   return embed;
 };
 
+const dispatch = async (args: string[]): Promise<MessageEmbed> => {
+  const baseUrl = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
+  let drink_url = baseUrl;
+  if (args.length === 0) {
+    drink_url += COCKTAIL.RANDOM_URL;
+  } else if (args[0].length === 1) {
+    const search_for_letter: string = args[0];
+    drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
+  } else {
+    const search_for_drink: string = _.toLower(_.join(args, "_"));
+    drink_url += `${COCKTAIL.SEARCH_URL}${search_for_drink}`;
+  }
+  return mix_drink(drink_url);
+};
+
+const mix_drink = async (url: string): Promise<MessageEmbed> => {
+  return await fetchDrinks(url).then(selectDrinkFromList).then(parseObjectToDrink).then(createDrinkEmbed);
+};
+
 module.exports = {
   name: "drink",
   description: "Get a drink randomly or by choice :beers: :tropical_drink:",
   hasArgs: false,
   usage: "<drink> | <starting_letter>",
   async execute(message: Message, args: string[]) {
-    const result = await processDrink(args).catch(e => {
-      console.error(e);
+    const result = await dispatch(args).catch(e => {
+      logger.error(`Fetching drink "${args.join(" ")}" failed:\n${e}`);
       return "404 Drink not found";
     });
 
     message.channel.send(result);
   },
-  generate_fields_list: generateFieldsList,
-  select_drink_from_list: selectDrinkFromList,
+  parseIngredientsFieldsList,
+  selectDrinkFromList,
 };
