@@ -77,16 +77,6 @@ const trim = (str: string, max: number): string => {
   return _.truncate(str, { length: max });
 };
 
-/**
- * Create an error with on guild and user, who triggered it
- * @param message: Discord Message to get guild and user information
- * @param errorMessage The error description
- * @returns An error object
- */
-const createError = (message: Message, errorMessage: string): Error => {
-  return Error(`Guild: ${message.guild.id}, Member: ${message.author}, Msg: ${errorMessage}`);
-};
-
 interface CommandInterface {
   name: string;
   description: string;
@@ -103,6 +93,5 @@ export {
   CommandInterface,
   resourceEndsWith,
   getCerealColor,
-  createError,
   trim,
 };
