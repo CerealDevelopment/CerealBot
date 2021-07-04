@@ -1,6 +1,6 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import fetch from "node-fetch";
-import _ from "lodash";
+import _, { size } from "lodash";
 import { getCerealColor, trim, getRandomNumber } from "../../utils";
 import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
@@ -141,7 +141,12 @@ module.exports = {
   async execute(message: Message, args: string[]) {
     const result = await dispatch(args).catch(e => {
       logger.error(`Fetching drink "${args.join(" ")}" failed:\n${e}`);
-      return "404 Drink not found";
+      const embed = new MessageEmbed()
+        .setColor(getCerealColor())
+        .setTitle("404 Drink not found")
+        .attachFiles(["./resources/pictures/errors/empty_glass.jpg"])
+        .setImage("attachment://empty_glass.jpg");
+      return embed;
     });
 
     message.channel.send(result);

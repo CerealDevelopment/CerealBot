@@ -11,6 +11,17 @@ const airhornFiles: Array<string> = findFilesWithEnding(pathToAirhornFiles, conf
 //TODO add Keyv guild storage
 let lastIndexOfAudioFile: number = 0;
 
+const possibleErrors = (msg: Message = null) => {
+  let authorId = "";
+  if (msg) {
+    authorId = msg.author.id;
+  }
+  return {
+    noFilesFound: "No sound files are found for Airhorn",
+    notInVoiceChannel: `The user "${authorId}" was not in a channel`,
+  };
+};
+
 /**
  * Creates a new string without white spaces and all lower case letters
  * @param str: String to be changed
@@ -62,13 +73,13 @@ const playAudio = async (message: Message, chosenFile: string) => {
 
 const checkAudioFiles = (numberOfAudioFiles: number) => {
   if (numberOfAudioFiles === 0) {
-    throw new Error("No sound files are found for Airhorn");
+    throw new Error(possibleErrors().noFilesFound);
   }
 };
 
 const checkUserInChannel = (message: Message) => {
   if (!message.member.voice.channel) {
-    throw new Error(`The user "${message.author.id}" was not in a channel`);
+    throw new Error(possibleErrors(message).notInVoiceChannel);
   }
 };
 
@@ -156,9 +167,9 @@ module.exports = {
   async execute(message: Message, args: string[]) {
     const result = await playAirhorn(message, args).catch((e: Error) => {
       logger.error(e);
-      if (e.message === "No sound files are found for Airhorn") {
+      if (e.message === possibleErrors().noFilesFound) {
         return "The Airhorns were stolen :fearful:";
-      } else if (e.message === `The user "${message.author.id}" was not in a channel`) {
+      } else if (e.message === possibleErrors(message).notInVoiceChannel) {
         return "You need to enter a voice channel ~";
       }
     });
