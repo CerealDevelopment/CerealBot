@@ -31,7 +31,7 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
       if (executable.neededUserPermissions.length != 0) {
         if (!checkRights(message, executable.neededUserPermissions)) {
           message.channel.send("You are not allowed to run the command");
-          throw Error(); //TODO add user name and command to log
+          throw new Error(`${message.author.id} got an error on '${command}'`);
         }
       }
     }
