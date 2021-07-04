@@ -11,10 +11,11 @@
     "pretty": "npx prettier --print-width 120 --arrow-parens avoid --write \"./src\" \"./tests\"",
     "clean": "rm -rf node_modules lib",
     "clean-install": "npm run-script clean && npm install",
+    "clean-logs": "rm logs/*",
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "npm run-script build && docker build --tag cerealdevelopment/cerealbot:latest .",
     "docker-push": "docker push cerealdevelopment/cerealbot:latest",
-    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest"
+    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,8 @@
     "node-fetch": "^2.6.1",
     "opusscript": "^0.0.8",
     "require": "^2.4.20",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.1.1",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",

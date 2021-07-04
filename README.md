@@ -69,6 +69,12 @@ Using `opusenc` it is very simple to convert a `.wav` to `opus/.ogg`:
 
 ## Used resources
 
+### Pictures
+
+- Bru-No
+
+  - [Empty bottle](https://pixabay.com/photos/bottle-empty-depleted-consumes-3551162/)
+
 ### Sounds
 
 The sound effects are provided by:

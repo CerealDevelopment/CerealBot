@@ -3,10 +3,24 @@ import _ from "lodash";
 import { Message, VoiceConnection } from "discord.js";
 import { findFilesWithEnding, getRandomNumber } from "../../utils";
 import config from "../../../config.json";
+import logger from "../../logging";
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
 const airhornFiles: Array<string> = findFilesWithEnding(pathToAirhornFiles, config.AUDIO_FILE_FORMAT);
+//TODO add Keyv guild storage
+let lastIndexOfAudioFile: number = 0;
+
+const possibleErrors = (msg: Message = null) => {
+  let authorId = "";
+  if (msg) {
+    authorId = msg.author.id;
+  }
+  return {
+    noFilesFound: "No sound files are found for Airhorn",
+    notInVoiceChannel: `The user "${authorId}" was not in a channel`,
+  };
+};
 
 /**
  * Creates a new string without white spaces and all lower case letters
@@ -27,14 +41,13 @@ const audioFileNames: Object = _.reduce(
   {}
 );
 
-let lastIndexOfAudioFile: number = 0;
-
 /**
  * Play's an audio file using the Bot user in the audio channel, of who wrote the message.
  * @param message - Discord message to find the correct Audio channel to play the sound in
  * @param chosenFile - The file to be played in the channel
  */
 const playAudio = async (message: Message, chosenFile: string) => {
+  checkUserInChannel(message);
   const audioFile: fs.ReadStream = fs.createReadStream(chosenFile);
   const connection: VoiceConnection = await message.member.voice.channel.join();
 
@@ -45,42 +58,29 @@ const playAudio = async (message: Message, chosenFile: string) => {
   });
 
   dispatcher.on("start", () => {
-    console.log(`${chosenFile} is now playing!`);
+    logger.info(`${chosenFile} is now playing!`);
   });
 
   dispatcher.on("finish", () => {
-    console.log(`${chosenFile} has finished playing!`);
+    logger.info(`${chosenFile} has finished playing!`);
     dispatcher.destroy();
     connection.disconnect();
   });
 
-  dispatcher.on("error", console.error);
-  connection.on("error", console.error);
+  dispatcher.on("error", logger.error);
+  connection.on("error", logger.error);
 };
 
-const checkAudioFiles = (message: Message, numberOfAudioFiles: number) => {
+const checkAudioFiles = (numberOfAudioFiles: number) => {
   if (numberOfAudioFiles === 0) {
-    message.channel.send("The Airhorns were stolen :fearful:");
-    throw new Error("No sound files are found for Airhorn");
+    throw new Error(possibleErrors().noFilesFound);
   }
 };
 
 const checkUserInChannel = (message: Message) => {
   if (!message.member.voice.channel) {
-    message.channel.send("You need to enter a voice channel ~");
-    throw new Error(`The user "${message.author.id}" was not in a channel`);
+    throw new Error(possibleErrors(message).notInVoiceChannel);
   }
-};
-
-const hasAirhornErrors = (message: Message, numberOfAudioFiles: number) => {
-  let result: boolean = false;
-  if (
-    _.isError(_.attempt(checkAudioFiles, message, numberOfAudioFiles)) ||
-    _.isError(_.attempt(checkUserInChannel, message))
-  ) {
-    result = true;
-  }
-  return result;
 };
 
 /**
@@ -97,9 +97,6 @@ const playSpecificAudioFile = async (
   audioFileNames: Object,
   args: string[]
 ): Promise<void> => {
-  if (hasAirhornErrors(message, _.keys(audioFileNames).length)) {
-    return;
-  }
   const choice: string = removeAllWhiteSpacesAndToLower(_.join(args, "_"));
   const audioFile: string = _.get(audioFileNames, choice, "airhorn_default.ogg");
   const chosenFile: string = `${pathToAudioFiles}/${audioFile}`;
@@ -143,15 +140,22 @@ const playRandomAirhorn = async (
   audioFiles: string[],
   lastIndexOfAudioFile: number
 ): Promise<number> => {
-  if (hasAirhornErrors(message, audioFiles.length)) {
-    return 0;
-  }
-
   const chooseFileNumber: number = getRandomNumber(audioFiles.length - 1, lastIndexOfAudioFile);
   const chosenFile: string = `${pathToAudioFiles}/${audioFiles[chooseFileNumber]}`;
 
   await playAudio(message, chosenFile);
   return chooseFileNumber;
+};
+
+const playAirhorn = async (message: Message, args: string[]) => {
+  checkAudioFiles(_.keys(audioFileNames).length);
+  if (_.isEmpty(args)) {
+    lastIndexOfAudioFile = await playRandomAirhorn(message, pathToAirhornFiles, airhornFiles, lastIndexOfAudioFile);
+  } else if (args[0] === "help") {
+    await printAirhornHelp(message, audioFileNames);
+  } else {
+    await playSpecificAudioFile(message, pathToAirhornFiles, audioFileNames, args);
+  }
 };
 
 module.exports = {
@@ -161,12 +165,17 @@ module.exports = {
   cooldown: 5,
   usage: "",
   async execute(message: Message, args: string[]) {
-    if (_.isEmpty(args)) {
-      lastIndexOfAudioFile = await playRandomAirhorn(message, pathToAirhornFiles, airhornFiles, lastIndexOfAudioFile);
-    } else if (args[0] === "help") {
-      await printAirhornHelp(message, audioFileNames);
-    } else {
-      await playSpecificAudioFile(message, pathToAirhornFiles, audioFileNames, args);
+    const result = await playAirhorn(message, args).catch((e: Error) => {
+      logger.error(e);
+      if (e.message === possibleErrors().noFilesFound) {
+        return "The Airhorns were stolen :fearful:";
+      } else if (e.message === possibleErrors(message).notInVoiceChannel) {
+        return "You need to enter a voice channel ~";
+      }
+    });
+
+    if (_.isString(result)) {
+      message.reply(result);
     }
   },
 };
