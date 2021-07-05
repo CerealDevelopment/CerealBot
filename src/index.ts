@@ -34,7 +34,7 @@ const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
 
 const clearAndSyncImgur = async () => {
   console.log("Run sync job");
-  const imgurResults = await fetchImgurResult().then((result) => {
+  const imgurResults = await fetchImgurResult().then(result => {
     return parseImgurResponseToArray(result);
   });
 
@@ -44,12 +44,7 @@ const clearAndSyncImgur = async () => {
   }
 };
 
-const executeCommand = (
-  message: Message,
-  prefix: string,
-  command: string,
-  args: string[]
-) => {
+const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
   const executable: CommandInterface = getCommandMap().get(command);
   if (executable !== undefined) {
     if (executable.neededUserPermissions !== undefined) {
@@ -75,7 +70,7 @@ const executeCommand = (
 
 client.once("ready", () => {
   console.log("Time to get cereal!");
-  isMemeDatabaseEmpty().then((isEmpty) => {
+  isMemeDatabaseEmpty().then(isEmpty => {
     if (isEmpty) {
       clearAndSyncImgur();
     }

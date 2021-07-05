@@ -27,11 +27,9 @@ module.exports = {
   usage: "",
   description: "Post a random (hopefully) funny meme image.",
   async execute(message: Message) {
-    const currentMeme: MessageEmbed = await selectRandomMeme().then(
-      (result) => {
-        return createMessageEmbed(result);
-      }
-    );
+    const currentMeme: MessageEmbed = await selectRandomMeme().then(result => {
+      return createMessageEmbed(result);
+    });
     message.channel.send(currentMeme);
   },
 };

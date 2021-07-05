@@ -20,7 +20,7 @@ const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
  */
 const fetchImgurResult = async (): Promise<JSON> => {
   return await fetch(IMGUR.URL, { headers: headers })
-    .then((response) => response.json())
+    .then(response => response.json())
     .catch((error: Error) => console.error(error))
     .finally(() => console.log("Imgur results fetched"));
 };
@@ -30,16 +30,13 @@ const fetchImgurResult = async (): Promise<JSON> => {
  * @param result
  */
 const parseImgurResponseToArray = (result: JSON): Array<MemeResource> => {
-  const imgurResults: Array<undefined | MemeResource> = _.flatMap(
-    result["data"]["items"],
-    (item: JSON) => {
-      if (item["is_album"]) {
-        return _.map(item["images"], createNewEntry);
-      } else {
-        return createNewEntry(item);
-      }
+  const imgurResults: Array<undefined | MemeResource> = _.flatMap(result["data"]["items"], (item: JSON) => {
+    if (item["is_album"]) {
+      return _.map(item["images"], createNewEntry);
+    } else {
+      return createNewEntry(item);
     }
-  );
+  });
   return _.compact(imgurResults);
 };
 
@@ -66,9 +63,7 @@ const selectRandomMeme = async (): Promise<MemeResource> => {
  *
  */
 const removeAllMemeFromDatabase = async () => {
-  await removeAllEntries().finally(() =>
-    console.log("Removed all old entries from database.")
-  );
+  await removeAllEntries().finally(() => console.log("Removed all old entries from database."));
 };
 
 /**
@@ -76,9 +71,7 @@ const removeAllMemeFromDatabase = async () => {
  */
 const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
   if (!_.isEmpty(memes)) {
-    await addBatchEntriesToDatabase(memes).finally(() =>
-      console.log("New meme resources saved to database")
-    );
+    await addBatchEntriesToDatabase(memes).finally(() => console.log("New meme resources saved to database"));
   }
 };
 

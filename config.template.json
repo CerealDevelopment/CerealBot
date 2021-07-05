@@ -24,10 +24,12 @@
     },
     "COCKTAIL": {
         "BASE_URL": "https://www.thecocktaildb.com/api/json/",
-        "RANDOM_URL": "v1/1/random.php",
-        "SEARCH_INGREDIENT": "v1/1/filter.php?i=",
-        "SEARCH_LETTER_URL": "v1/1/search.php?f=",
-        "SEARCH_URL": "v1/1/search.php?s="
+        "API_VERSION": "v1/",
+        "API_KEY": "1/",
+        "RANDOM_URL": "random.php",
+        "SEARCH_INGREDIENT": "filter.php?i=",
+        "SEARCH_LETTER_URL": "search.php?f=",
+        "SEARCH_URL": "search.php?s="
     },
     "MEME": {
         "SYNC_AT_MIDNIGHT": "0 0 * * *",

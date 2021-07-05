@@ -1,8 +1,8 @@
 import { Knex } from "knex";
-import { MEME } from "../../../config.json"
+import { MEME } from "../../../config.json";
 
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTableIfNotExists(MEME.TABLE_NAME, (table) => {
+  return knex.schema.createTableIfNotExists(MEME.TABLE_NAME, table => {
     table.string("id").primary().notNullable().unique();
     table.string("title").nullable();
     table.string("description").nullable();

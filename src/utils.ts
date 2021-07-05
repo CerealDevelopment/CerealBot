@@ -71,11 +71,4 @@ interface CommandInterface {
   execute(message: Message, args?: Array<string>);
 }
 
-export {
-  findFilesWithEnding,
-  getRandomNumber,
-  getCommandMap,
-  CommandInterface,
-  getCerealColor,
-  trim,
-};
+export { findFilesWithEnding, getRandomNumber, getCommandMap, CommandInterface, getCerealColor, trim };

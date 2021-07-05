@@ -1,7 +1,7 @@
 import { knex } from "knex";
 import knexConfig from "../../data/knexfile";
 import { MemeResource } from "../../types";
-import { MEME } from "../../../config.json"
+import { MEME } from "../../../config.json";
 
 const config = knexConfig.development;
 const db = knex(config);
@@ -19,11 +19,7 @@ const addBatchEntriesToDatabase = async (entries: Array<MemeResource>) => {
  * @returns
  */
 const selectRandomDbEntry = async (): Promise<MemeResource> => {
-  const [result] = await db
-    .select("*")
-    .from<MemeResource>(MEME.TABLE_NAME)
-    .orderByRaw("RANDOM()")
-    .limit(1);
+  const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
   return result;
 };
 
@@ -42,9 +38,4 @@ const countDatabaseEntries = async (): Promise<Record<string, number>> => {
   return await db(MEME.TABLE_NAME).count<Record<string, number>>("id");
 };
 
-export {
-  addBatchEntriesToDatabase,
-  selectRandomDbEntry,
-  removeAllEntries,
-  countDatabaseEntries,
-};
+export { addBatchEntriesToDatabase, selectRandomDbEntry, removeAllEntries, countDatabaseEntries };
