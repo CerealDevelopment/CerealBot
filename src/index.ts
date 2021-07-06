@@ -8,7 +8,7 @@ import cron from "node-cron";
 import {
   fetchImgurResult,
   removeAllMemeFromDatabase,
-  parseImgurResponseToArray,
+  parseMemeResponseToArray,
   addCollectionOfMemesToDatabase,
   isMemeDatabaseEmpty,
 } from "./commands/meme/memeService";
@@ -33,9 +33,9 @@ const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
 });
 
 const clearAndSyncImgur = async () => {
-  console.log("Run sync job");
+  logger.info("Run sync job");
   const imgurResults = await fetchImgurResult().then(result => {
-    return parseImgurResponseToArray(result);
+    return parseMemeResponseToArray(result);
   });
 
   if (!_.isEmpty(imgurResults)) {
@@ -69,7 +69,7 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
 };
 
 client.once("ready", () => {
-  console.log("Time to get cereal!");
+  logger.info("Time to get cereal!");
   isMemeDatabaseEmpty().then(isEmpty => {
     if (isEmpty) {
       clearAndSyncImgur();
