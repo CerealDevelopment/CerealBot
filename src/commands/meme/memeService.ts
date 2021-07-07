@@ -23,7 +23,7 @@ const fetchImgurResult = async (): Promise<JSON> => {
   return await fetch(IMGUR.URL, { headers: headers })
     .then(response => response.json())
     .catch(error => logger.error(error))
-    .finally(() => logger.info("Imgur results fetched"));
+    .finally(() => logger.debug("Imgur results fetched"));
 };
 
 /**
@@ -31,8 +31,8 @@ const fetchImgurResult = async (): Promise<JSON> => {
  * @param result
  */
 const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
-  if(!result) {
-    throw new Error("result must not be null.")
+  if (!result) {
+    throw new Error("result must not be null.");
   }
   const imgurResults: Array<undefined | MemeResource> = _.flatMap(result["data"]["items"], (item: JSON) => {
     if (item["is_album"]) {
@@ -83,7 +83,7 @@ const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
  *
  */
 const isMemeDatabaseEmpty = async (): Promise<boolean> => {
-  return await countDatabaseEntries().then((result) => {
+  return await countDatabaseEntries().then(result => {
     return result[0]["count(`id`)"] == 0;
   });
 };

@@ -13,7 +13,9 @@ const db = knex(config);
  * @param entries
  */
 const addBatchEntriesToDatabase = async (entries: Array<MemeResource>) => {
-  await db(MEME.TABLE_NAME).insert(entries).catch(error => logger.error(error));
+  await db(MEME.TABLE_NAME)
+    .insert(entries)
+    .catch(error => logger.error(error));
 };
 
 /**
@@ -22,8 +24,8 @@ const addBatchEntriesToDatabase = async (entries: Array<MemeResource>) => {
  */
 const selectRandomDbEntry = async (): Promise<MemeResource> => {
   const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
-  if(_.isEmpty(result)) {
-    throw new Error("No entries in Database present.")
+  if (_.isEmpty(result)) {
+    throw new Error("No entries in Database present.");
   }
   return result;
 };
@@ -32,7 +34,10 @@ const selectRandomDbEntry = async (): Promise<MemeResource> => {
  *
  */
 const removeAllEntries = async () => {
-  await db(MEME.TABLE_NAME).whereNotNull("id").del().catch(error => logger.error(error));
+  await db(MEME.TABLE_NAME)
+    .whereNotNull("id")
+    .del()
+    .catch(error => logger.error(error));
 };
 
 /**
@@ -41,9 +46,11 @@ const removeAllEntries = async () => {
  */
 const countDatabaseEntries = async (): Promise<void | Record<string, number>> => {
   // todo Why is this working and not the shorter .catch(error => logger.error(error))?
-  return await db(MEME.TABLE_NAME).count<Record<string, number>>("id").catch(error => { 
-    logger.error(error);
-  });
+  return await db(MEME.TABLE_NAME)
+    .count<Record<string, number>>("id")
+    .catch(error => {
+      logger.error(error);
+    });
 };
 
 export { addBatchEntriesToDatabase, selectRandomDbEntry, removeAllEntries, countDatabaseEntries };
