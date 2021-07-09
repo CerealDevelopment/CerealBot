@@ -17,7 +17,8 @@ const headers = {
 const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
 
 /**
- *
+ * Call Imgur api and fetch result
+ * @returns JSON response from Imgur
  */
 const fetchImgurResult = async (): Promise<JSON> => {
   return await fetch(IMGUR.URL, { headers: headers })
@@ -27,8 +28,9 @@ const fetchImgurResult = async (): Promise<JSON> => {
 };
 
 /**
- *
- * @param result
+ * JSON response with memes is parsed and converted to an Array if MemeResource objects
+ * @param result JSON response
+ * @Return Array of MemeResources
  */
 const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
   if (!result) {
@@ -45,9 +47,9 @@ const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
 };
 
 /**
- *
- * @param json
- * @returns
+ * A single meme response is parsed to a MemeResource object
+ * @param memeResource Single meme resource as JSON
+ * @returns Single MemeResource or undefined
  */
 const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
   if (imageTypes.has(memeResource["type"])) {
@@ -56,22 +58,23 @@ const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
 };
 
 /**
- *
- * @returns
+ * Call to select a random meme from database
+ * @returns Random meme
  */
 const selectRandomMeme = async (): Promise<MemeResource> => {
   return await selectRandomDbEntry();
 };
 
 /**
- *
+ * Call to remove all memes from the meme table
  */
 const removeAllMemeFromDatabase = async () => {
   await removeAllEntries().finally(() => logger.info("Removed all old entries from database."));
 };
 
 /**
- *
+ * Call to add a batch of memes to the database
+ * @param memes An array of MemeResources
  */
 const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
   if (!_.isEmpty(memes)) {
@@ -80,7 +83,8 @@ const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
 };
 
 /**
- *
+ * Determine if the meme table is empty
+ * @returns A status if database is empty or not
  */
 const isMemeDatabaseEmpty = async (): Promise<boolean> => {
   return await countDatabaseEntries().then(result => {

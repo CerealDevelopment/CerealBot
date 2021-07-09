@@ -9,8 +9,8 @@ const config = knexConfig.development;
 const db = knex(config);
 
 /**
- *
- * @param entries
+ * Inserts MemeResources to database
+ * @param entries Array with MemeResource objects
  */
 const addBatchEntriesToDatabase = async (entries: Array<MemeResource>) => {
   await db(MEME.TABLE_NAME)
@@ -19,8 +19,8 @@ const addBatchEntriesToDatabase = async (entries: Array<MemeResource>) => {
 };
 
 /**
- *
- * @returns
+ * Select a random meme entry from database
+ * @returns Random meme
  */
 const selectRandomDbEntry = async (): Promise<MemeResource> => {
   const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
@@ -31,7 +31,7 @@ const selectRandomDbEntry = async (): Promise<MemeResource> => {
 };
 
 /**
- *
+ * Remove all entries in the meme table
  */
 const removeAllEntries = async () => {
   await db(MEME.TABLE_NAME)
@@ -41,11 +41,10 @@ const removeAllEntries = async () => {
 };
 
 /**
- *
- * @returns result
+ * Count entries in the meme table
+ * @returns Number of entries
  */
 const countDatabaseEntries = async (): Promise<void | Record<string, number>> => {
-  // todo Why is this working and not the shorter .catch(error => logger.error(error))?
   return await db(MEME.TABLE_NAME)
     .count<Record<string, number>>("id")
     .catch(error => {

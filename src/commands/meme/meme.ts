@@ -6,14 +6,14 @@ import { selectRandomMeme } from "../../commands/meme/memeService";
 import { MemeResource } from "../../models/meme";
 
 /**
- *
- * @param imgurObject
- * @returns MessageEmbed The content is wrapped in a MessageEmbed
+ * A meme is transformed to a MessageEmbed
+ * @param meme A meme
+ * @returns A MessageEmbed with meme content
  */
-const createMessageEmbed = (imgurObject: MemeResource): MessageEmbed => {
-  const title = imgurObject.title ?? "";
-  const desc = imgurObject.description ?? "";
-  const link = imgurObject.link;
+const createMessageEmbed = (meme: MemeResource): MessageEmbed => {
+  const title = meme.title ?? "";
+  const desc = meme.description ?? "";
+  const link = meme.link;
   return new MessageEmbed()
     .setColor(getCerealColor())
     .setTitle(trim(title, DISCORD.EMBED.TITLE_CHAR_LIMIT))
