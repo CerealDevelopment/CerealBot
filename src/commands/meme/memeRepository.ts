@@ -1,6 +1,6 @@
 import { knex } from "knex";
 import knexConfig from "../../data/knexfile";
-import { MemeResource } from "../../types";
+import { MemeResource } from "../../models/meme";
 import { MEME } from "../../../config.json";
 import logger from "../../logging";
 import _ from "lodash";

@@ -1,4 +1,4 @@
-export class MemeResource {
+class MemeResource {
   id: string;
   title: string;
   description: string;
@@ -16,3 +16,5 @@ export class MemeResource {
     this.type = imgurResult["type"];
   }
 }
+
+export { MemeResource };

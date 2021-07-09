@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { IMGUR } from "../../../config.json";
-import { MemeResource } from "../../types";
+import { MemeResource } from "../../models/meme";
 import {
   selectRandomDbEntry,
   addBatchEntriesToDatabase,

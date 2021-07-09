@@ -3,7 +3,7 @@ import { getCerealColor, trim } from "../../utils";
 import _ from "lodash";
 import { DISCORD } from "../../../config.json";
 import { selectRandomMeme } from "../../commands/meme/memeService";
-import { MemeResource } from "../../types";
+import { MemeResource } from "../../models/meme";
 
 /**
  *
