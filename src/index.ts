@@ -75,30 +75,17 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
   }
 };
 
-/**
- * Check if memes are available or start a sync
- */
-const memeAvailabilityCheckUp = () => {
-  logger.debug("memeAvailabilityCheckUp() <-");
-  isMemeDatabaseEmpty().then(isEmpty => {
-    if (isEmpty) {
-      clearDatabaseAndSyncWithImgur();
-    }
-  });
-};
-
-/**
- * Run schema migration of latest
- * @returns
- */
-const runDbMigrationOnStartup = (): Promise<Object> => {
-  return db.migrate.latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES });
-};
-
 client.once("ready", () => {
   logger.info("Time to get cereal!");
-  runDbMigrationOnStartup()
-    .then(memeAvailabilityCheckUp);
+  db.migrate
+    .latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES })
+    .then(isMemeDatabaseEmpty)
+    .then(isEmpty => {
+      if (isEmpty) {
+        clearDatabaseAndSyncWithImgur();
+      }
+    })
+    .catch(e => logger.error(e));
 });
 
 cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {

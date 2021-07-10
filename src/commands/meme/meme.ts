@@ -28,13 +28,15 @@ module.exports = {
   usage: "",
   description: "Post a random (hopefully) funny meme image.",
   async execute(message: Message) {
-    const currentMeme = await selectRandomMeme().then(result => {
-      return createMessageEmbed(result);
-    }).catch(error => {
-      logger.error(error)
-      return "No Meme found :fearful:";
-    });
-    
+    const currentMeme = await selectRandomMeme()
+      .then(result => {
+        return createMessageEmbed(result);
+      })
+      .catch(error => {
+        logger.error(error);
+        return "No Meme found :fearful:";
+      });
+
     message.channel.send(currentMeme);
   },
 };

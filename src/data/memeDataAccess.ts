@@ -19,8 +19,7 @@ const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
  * @returns JSON response from Imgur
  */
 const fetchImgurResult = async (): Promise<JSON> => {
-  return await fetch(IMGUR.URL, { headers: headers })
-    .then(response => response.json());
+  return await fetch(IMGUR.URL, { headers: headers }).then(response => response.json());
 };
 
 /**
@@ -69,9 +68,7 @@ const selectRandomMeme = async (): Promise<MemeResource> => {
  * Call to remove all memes from the meme table
  */
 const removeAllMemeFromDatabase = async () => {
-  await db(MEME.TABLE_NAME)
-    .whereNotNull("id")
-    .del();
+  await db(MEME.TABLE_NAME).whereNotNull("id").del();
 };
 
 /**
@@ -80,8 +77,7 @@ const removeAllMemeFromDatabase = async () => {
  */
 const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
   if (!_.isEmpty(memes)) {
-    await db(MEME.TABLE_NAME)
-      .insert(memes);
+    await db(MEME.TABLE_NAME).insert(memes);
   }
 };
 
