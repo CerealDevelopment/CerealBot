@@ -12,7 +12,11 @@ import {
   addCollectionOfMemesToDatabase,
   isMemeDatabaseEmpty,
 } from "./commands/meme/memeService";
+import { knex } from "knex";
+import knexConfig from "./data/knexfile";
 
+const config = knexConfig.development;
+const db = knex(config);
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
@@ -83,9 +87,19 @@ const memeAvailabilityCheckUp = () => {
   });
 };
 
+/**
+ * Run schema migration of latest
+ * @returns
+ */
+const runDbMigrationOnStartup = (): Promise<Object> => {
+  return db.migrate.latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES });
+};
+
 client.once("ready", () => {
   logger.info("Time to get cereal!");
-  memeAvailabilityCheckUp();
+  runDbMigrationOnStartup()
+    .then(memeAvailabilityCheckUp)
+    .catch(error => logger.error(error));
 });
 
 cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {

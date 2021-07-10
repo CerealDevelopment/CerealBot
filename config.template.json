@@ -12,7 +12,8 @@
         "NAME": "dev.database.sqlite",
         "CONNECTION_STRING": "sqlite://dev.database.sqlite",
         "DEBUG": true,
-        "USE_NULL_AS_DEFAULT": true
+        "USE_NULL_AS_DEFAULT": true,
+        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
