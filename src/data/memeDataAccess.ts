@@ -4,7 +4,6 @@ import knexConfig from "../data/knexfile";
 import { IMGUR, MEME } from "../../config.json";
 import { MemeResource } from "../models/meme";
 import _ from "lodash";
-import logger from "../logging";
 
 const config = knexConfig.development;
 const db = knex(config);
