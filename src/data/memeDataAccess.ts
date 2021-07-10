@@ -1,14 +1,13 @@
 import fetch from "node-fetch";
-import { IMGUR } from "../../../config.json";
-import { MemeResource } from "../../models/meme";
-import {
-  selectRandomDbEntry,
-  addBatchEntriesToDatabase,
-  removeAllEntries,
-  countDatabaseEntries,
-} from "../../commands/meme/memeRepository";
+import { knex } from "knex";
+import knexConfig from "../data/knexfile";
+import { IMGUR, MEME } from "../../config.json";
+import { MemeResource } from "../models/meme";
 import _ from "lodash";
-import logger from "../../logging";
+import logger from "../logging";
+
+const config = knexConfig.development;
+const db = knex(config);
 
 const headers = {
   Accept: "application/json",
@@ -58,18 +57,25 @@ const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
 };
 
 /**
- * Call to select a random meme from database
+ * Select a random meme entry from database
  * @returns Random meme
  */
 const selectRandomMeme = async (): Promise<MemeResource> => {
-  return await selectRandomDbEntry();
+  const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
+  if (_.isEmpty(result)) {
+    throw new Error("No entries in Database present.");
+  }
+  return result;
 };
 
 /**
  * Call to remove all memes from the meme table
  */
 const removeAllMemeFromDatabase = async () => {
-  await removeAllEntries().finally(() => logger.debug("Removed old entries from database."));
+  await db(MEME.TABLE_NAME)
+    .whereNotNull("id")
+    .del()
+    .catch(error => logger.error(error));
 };
 
 /**
@@ -78,7 +84,9 @@ const removeAllMemeFromDatabase = async () => {
  */
 const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
   if (!_.isEmpty(memes)) {
-    await addBatchEntriesToDatabase(memes).finally(() => logger.debug("New meme resources saved to database"));
+    await db(MEME.TABLE_NAME)
+      .insert(memes)
+      .catch(error => logger.error(error));
   }
 };
 
@@ -86,10 +94,15 @@ const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
  * Determine if the meme table is empty
  * @returns A status if database is empty or not
  */
-const isMemeDatabaseEmpty = async (): Promise<boolean> => {
-  return await countDatabaseEntries().then(result => {
-    return result[0]["count(`id`)"] == 0;
-  });
+const isMemeDatabaseEmpty = async (): Promise<boolean | void> => {
+  return await db(MEME.TABLE_NAME)
+    .count<Record<string, number>>("id")
+    .then(result => {
+      return result[0]["count(`id`)"] == 0;
+    })
+    .catch(error => {
+      logger.error(error);
+    });
 };
 
 export {

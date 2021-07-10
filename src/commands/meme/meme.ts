@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { getCerealColor, trim } from "../../utils";
 import _ from "lodash";
 import { DISCORD } from "../../../config.json";
-import { selectRandomMeme } from "../../commands/meme/memeService";
+import { selectRandomMeme } from "../../data/memeDataAccess";
 import { MemeResource } from "../../models/meme";
 
 /**

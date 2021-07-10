@@ -11,7 +11,7 @@ import {
   parseMemeResponseToArray,
   addCollectionOfMemesToDatabase,
   isMemeDatabaseEmpty,
-} from "./commands/meme/memeService";
+} from "./data/memeDataAccess";
 import { knex } from "knex";
 import knexConfig from "./data/knexfile";
 
