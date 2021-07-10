@@ -15,7 +15,7 @@
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "npm run-script build && docker build --tag cerealdevelopment/cerealbot:latest .",
     "docker-push": "docker push cerealdevelopment/cerealbot:latest",
-    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest",
+    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest",
     "knex": "./node_modules/.bin/knex --knexfile src/data/knexfiles.ts"
   },
   "repository": {
