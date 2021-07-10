@@ -69,7 +69,7 @@ const selectRandomMeme = async (): Promise<MemeResource> => {
  * Call to remove all memes from the meme table
  */
 const removeAllMemeFromDatabase = async () => {
-  await removeAllEntries().finally(() => logger.info("Removed all old entries from database."));
+  await removeAllEntries().finally(() => logger.debug("Removed old entries from database."));
 };
 
 /**

@@ -32,8 +32,11 @@ const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });
 
-const clearAndSyncImgur = async () => {
-  logger.info("Run sync job");
+/**
+ * Clear database if old entries are available and fill with new memes
+ */
+const clearDatabaseAndSyncWithImgur = async () => {
+  logger.info("Run meme sync job");
   const imgurResults = await fetchImgurResult().then(result => {
     return parseMemeResponseToArray(result);
   });
@@ -68,17 +71,25 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
   }
 };
 
-client.once("ready", () => {
-  logger.info("Time to get cereal!");
+/**
+ * Check if memes are available or start a sync
+ */
+const memeAvailabilityCheckUp = () => {
+  logger.debug("memeAvailabilityCheckUp() <-");
   isMemeDatabaseEmpty().then(isEmpty => {
     if (isEmpty) {
-      clearAndSyncImgur();
+      clearDatabaseAndSyncWithImgur();
     }
   });
+};
+
+client.once("ready", () => {
+  logger.info("Time to get cereal!");
+  memeAvailabilityCheckUp();
 });
 
 cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
-  await clearAndSyncImgur();
+  await clearDatabaseAndSyncWithImgur();
 });
 
 client.on("message", async (message: Message) => {
