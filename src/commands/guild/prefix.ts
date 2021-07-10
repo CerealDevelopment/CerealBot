@@ -45,10 +45,9 @@ module.exports = {
     const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
       namespace: "guildConfig",
     });
-    const reply = await dispatchPrefixFun(message, keyvGuildConfig, args)
-    .catch(e => {
-      logger.error(e)
-      return e.message
+    const reply = await dispatchPrefixFun(message, keyvGuildConfig, args).catch(e => {
+      logger.error(e);
+      return e.message;
     });
 
     message.reply(reply);

@@ -11,9 +11,16 @@
         "CLIENT": "sqlite3",
         "NAME": "dev.database.sqlite",
         "CONNECTION_STRING": "sqlite://dev.database.sqlite",
-        "DEBUG": true,
         "USE_NULL_AS_DEFAULT": true,
-        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations"
+        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations",
+        "KNEX_CONFIG": {
+            "client": "sqlite3",
+            "connection": {
+                "filename": "dev.database.sqlite"
+            },
+            "debuig": true,
+            "useNullAsDefault": true            
+        }
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {

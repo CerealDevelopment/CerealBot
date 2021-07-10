@@ -12,11 +12,9 @@ import {
   addCollectionOfMemesToDatabase,
   isMemeDatabaseEmpty,
 } from "./data/memeDataAccess";
-import { knex } from "knex";
-import knexConfig from "./data/knexfile";
+import { knex, Knex } from "knex";
 
-const config = knexConfig.development;
-const db = knex(config);
+const db = knex(DATABASE.KNEX_CONFIG as Knex.Config);
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 

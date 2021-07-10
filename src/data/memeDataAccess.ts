@@ -1,12 +1,10 @@
 import fetch from "node-fetch";
-import { knex } from "knex";
-import knexConfig from "../data/knexfile";
-import { IMGUR, MEME } from "../../config.json";
+import { knex, Knex } from "knex";
+import { IMGUR, MEME, DATABASE } from "../../config.json";
 import { MemeResource } from "../models/meme";
 import _ from "lodash";
 
-const config = knexConfig.development;
-const db = knex(config);
+const db = knex(DATABASE.KNEX_CONFIG as Knex.Config);
 
 const headers = {
   Accept: "application/json",
@@ -57,7 +55,12 @@ const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
  * @returns Random meme
  */
 const selectRandomMeme = async (): Promise<MemeResource> => {
-  const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
+  const [result] = await db
+    .select("*")
+    .whereNull("nsfw")
+    .from<MemeResource>(MEME.TABLE_NAME)
+    .orderByRaw("RANDOM()")
+    .limit(1);
   if (_.isEmpty(result)) {
     throw new Error("No entries in database present.");
   }
