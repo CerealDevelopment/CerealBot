@@ -4,6 +4,7 @@ import _ from "lodash";
 import { DISCORD } from "../../../config.json";
 import { selectRandomMeme } from "../../data/memeDataAccess";
 import { MemeResource } from "../../models/meme";
+import logger from "../../logging";
 
 /**
  * A meme is transformed to a MessageEmbed
@@ -29,7 +30,11 @@ module.exports = {
   async execute(message: Message) {
     const currentMeme = await selectRandomMeme().then(result => {
       return createMessageEmbed(result);
+    }).catch(error => {
+      logger.error(error)
+      return "No Meme found :fearful:";
     });
+    
     message.channel.send(currentMeme);
   },
 };

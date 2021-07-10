@@ -21,9 +21,7 @@ const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
  */
 const fetchImgurResult = async (): Promise<JSON> => {
   return await fetch(IMGUR.URL, { headers: headers })
-    .then(response => response.json())
-    .catch(error => logger.error(error))
-    .finally(() => logger.debug("Imgur results fetched"));
+    .then(response => response.json());
 };
 
 /**
@@ -63,7 +61,7 @@ const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
 const selectRandomMeme = async (): Promise<MemeResource> => {
   const [result] = await db.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
   if (_.isEmpty(result)) {
-    throw new Error("No entries in Database present.");
+    throw new Error("No entries in database present.");
   }
   return result;
 };
@@ -74,8 +72,7 @@ const selectRandomMeme = async (): Promise<MemeResource> => {
 const removeAllMemeFromDatabase = async () => {
   await db(MEME.TABLE_NAME)
     .whereNotNull("id")
-    .del()
-    .catch(error => logger.error(error));
+    .del();
 };
 
 /**
@@ -85,8 +82,7 @@ const removeAllMemeFromDatabase = async () => {
 const addCollectionOfMemesToDatabase = async (memes: Array<MemeResource>) => {
   if (!_.isEmpty(memes)) {
     await db(MEME.TABLE_NAME)
-      .insert(memes)
-      .catch(error => logger.error(error));
+      .insert(memes);
   }
 };
 
@@ -99,9 +95,6 @@ const isMemeDatabaseEmpty = async (): Promise<boolean | void> => {
     .count<Record<string, number>>("id")
     .then(result => {
       return result[0]["count(`id`)"] == 0;
-    })
-    .catch(error => {
-      logger.error(error);
     });
 };
 

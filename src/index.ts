@@ -98,8 +98,7 @@ const runDbMigrationOnStartup = (): Promise<Object> => {
 client.once("ready", () => {
   logger.info("Time to get cereal!");
   runDbMigrationOnStartup()
-    .then(memeAvailabilityCheckUp)
-    .catch(error => logger.error(error));
+    .then(memeAvailabilityCheckUp);
 });
 
 cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
