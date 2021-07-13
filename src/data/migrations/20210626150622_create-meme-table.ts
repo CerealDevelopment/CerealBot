@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("link").notNullable();
     table.boolean("nsfw").nullable();
     table.string("type").nullable();
-    table.dateTime("created_at").defaultTo(knex.fn.now());
+    table.dateTime("created_at");
   });
 }
 

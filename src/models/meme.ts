@@ -5,7 +5,7 @@ class MemeResource {
   link: string;
   nsfw: boolean;
   type: string;
-  created_at: Date;
+  created_at: Date = new Date();
 
   constructor(imgurResult: JSON) {
     this.id = imgurResult["id"];
