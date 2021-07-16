@@ -15,7 +15,8 @@
     "docker-pull": "docker cerealdevelopment/cerealbot:latest",
     "docker-build": "npm run-script build && docker build --tag cerealdevelopment/cerealbot:latest .",
     "docker-push": "docker push cerealdevelopment/cerealbot:latest",
-    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest"
+    "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot cerealdevelopment/cerealbot:latest",
+    "knex": "./node_modules/.bin/knex --knexfile src/data/knexfiles.ts"
   },
   "repository": {
     "type": "git",
@@ -40,9 +41,12 @@
   "dependencies": {
     "@discordjs/opus": "^0.4.0",
     "@keyv/sqlite": "^2.0.2",
+    "@types/node-cron": "^2.0.3",
     "discord.js": "^12.5.3",
     "keyv": "^4.0.3",
+    "knex": "^0.95.6",
     "lodash": "^4.17.21",
+    "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "opusscript": "^0.0.8",
     "require": "^2.4.20",

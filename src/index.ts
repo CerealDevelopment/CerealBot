@@ -1,10 +1,20 @@
 import { Client, Message } from "discord.js";
-import { DISCORD, DATABASE } from "../config.json";
+import { DISCORD, DATABASE, MEME } from "../config.json";
 import { CommandInterface, getCommandMap } from "./utils";
 import _ from "lodash";
 import Keyv from "keyv";
 import logger from "./logging";
+import cron from "node-cron";
+import {
+  fetchImgurResult,
+  removeAllMemeFromDatabase,
+  parseMemeResponseToArray,
+  addCollectionOfMemesToDatabase,
+  isMemeDatabaseEmpty,
+} from "./data/memeDataAccess";
+import { knex, Knex } from "knex";
 
+const db = knex(DATABASE.KNEX_CONFIG as Knex.Config);
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
@@ -23,6 +33,21 @@ const checkRights = (message: Message, rights): boolean => {
 const keyvGuildConfig: Keyv = new Keyv(DATABASE.CONNECTION_STRING, {
   namespace: "guildConfig",
 });
+
+/**
+ * Clear database if old entries are available and fill with new memes
+ */
+const clearDatabaseAndSyncWithImgur = async () => {
+  logger.info("Run meme sync job");
+  const imgurResults = await fetchImgurResult().then(result => {
+    return parseMemeResponseToArray(result);
+  });
+
+  if (!_.isEmpty(imgurResults)) {
+    removeAllMemeFromDatabase();
+    addCollectionOfMemesToDatabase(imgurResults);
+  }
+};
 
 const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
   const executable: CommandInterface = getCommandMap().get(command);
@@ -50,6 +75,19 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
 
 client.once("ready", () => {
   logger.info("Time to get cereal!");
+  db.migrate
+    .latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES })
+    .then(isMemeDatabaseEmpty)
+    .then(isEmpty => {
+      if (isEmpty) {
+        clearDatabaseAndSyncWithImgur();
+      }
+    })
+    .catch(e => logger.error(e));
+});
+
+cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
+  await clearDatabaseAndSyncWithImgur();
 });
 
 client.on("message", async (message: Message) => {
