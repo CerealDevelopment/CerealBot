@@ -93,7 +93,6 @@ cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
 client.on("message", async (message: Message) => {
   const guildPrefix: string | undefined = await keyvGuildConfig.get(message.guild.id);
   const prefix: string = guildPrefix ? guildPrefix : globalPrefix;
-
   if (!message.content.startsWith(prefix) || message.author.bot) {
     if (_.isEqual(_.trim(message.content.toLocaleLowerCase()), "prefix")) {
       message.reply(`Prefix is \`${prefix}\``);
@@ -103,6 +102,7 @@ client.on("message", async (message: Message) => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLocaleLowerCase();
+  logger.info(`Called '${command}' by '${message.author.id}' in '${message.guild.id}'`);
   const executedCommand = _.attempt(executeCommand, message, prefix, command, args);
 
   if (_.isError(executedCommand)) {
