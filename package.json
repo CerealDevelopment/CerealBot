@@ -1,6 +1,6 @@
 {
   "name": "cerealbot",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Cereal Bot for extreme Cereal Content",
   "main": "lib/index.js",
   "scripts": {
