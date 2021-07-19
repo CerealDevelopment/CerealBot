@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import _ from "lodash";
 import { getCerealColor, trim, getRandomNumber } from "../../utils";
