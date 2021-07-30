@@ -5,6 +5,15 @@ import { trim, getCerealColor } from "../../utils";
 import { URBAN, DISCORD } from "../../../config.json";
 import logger from "../../logging";
 
+interface Answer {
+  word: string;
+  permalink: string;
+  definition: string;
+  example: string;
+  thumbs_up: number;
+  thumbs_down: number;
+}
+
 const buildUrbanUrl = async (args: string[]): Promise<string> => {
   const query = querystring.stringify({ term: args.join(" ") });
   return `${URBAN.URL}${query}`;
@@ -15,20 +24,20 @@ const fetchUrban = async (url: string): Promise<any> => {
   return list;
 };
 
-const checkResponse = (list: any[]): any[] => {
+const checkResponse = (list: any[]): Answer[] => {
   if (list.length) {
-    return list;
+    return <Answer[]>list;
   } else {
-    throw new Error("Response is empty");
+    throw new Error("Drink response is empty");
   }
 };
 
-const getAnswer = (list: any[]): any => {
+const getFirstAnswer = (list: Answer[]): Answer => {
   const [answer] = list;
   return answer;
 };
 
-const buildEmbed = async (answer: any): Promise<MessageEmbed> => {
+const buildEmbed = async (answer: Answer): Promise<MessageEmbed> => {
   const embed = new MessageEmbed()
     .setColor(getCerealColor())
     .setTitle(answer.word)
@@ -51,7 +60,7 @@ const buildEmbed = async (answer: any): Promise<MessageEmbed> => {
 };
 
 const urban = async (args: string[]): Promise<MessageEmbed> => {
-  return await buildUrbanUrl(args).then(fetchUrban).then(checkResponse).then(getAnswer).then(buildEmbed);
+  return await buildUrbanUrl(args).then(fetchUrban).then(checkResponse).then(getFirstAnswer).then(buildEmbed);
 };
 
 module.exports = {
@@ -67,4 +76,7 @@ module.exports = {
 
     message.channel.send(result);
   },
+  checkResponse,
+  getFirstAnswer,
+  buildEmbed,
 };
