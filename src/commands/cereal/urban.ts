@@ -67,6 +67,7 @@ module.exports = {
   name: "urban",
   description: "Ask the urban dictionary",
   hasArgs: true,
+  neededUserPermissions: [],
   usage: "<terms>",
   async execute(message: Message, args: string[]) {
     const result = await urban(args).catch(e => {

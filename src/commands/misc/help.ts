@@ -43,6 +43,7 @@ module.exports = {
   name: "help",
   description: "Help for all commands of this bot.",
   hasArgs: false,
+  neededUserPermissions: [],
   usage: "",
   async execute(message: Message, args: string[]) {
     const result = await getFormattedAnswer(args);

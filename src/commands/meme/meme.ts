@@ -25,6 +25,7 @@ const createMessageEmbed = (meme: MemeResource): MessageEmbed => {
 module.exports = {
   name: "meme",
   hasArgs: false,
+  neededUserPermissions: [],
   usage: "",
   description: "Post a random (hopefully) funny meme image.",
   async execute(message: Message) {

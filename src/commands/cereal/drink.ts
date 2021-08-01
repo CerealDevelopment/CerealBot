@@ -137,6 +137,7 @@ module.exports = {
   name: "drink",
   description: "Get a drink randomly or by choice :beers: :tropical_drink:",
   hasArgs: false,
+  neededUserPermissions: [],
   usage: "<drink> | <starting_letter>",
   async execute(message: Message, args: string[]) {
     const result = await dispatch(args).catch(e => {

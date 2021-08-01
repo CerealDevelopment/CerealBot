@@ -163,6 +163,7 @@ module.exports = {
   description: "BEEEP!",
   hasArgs: false,
   cooldown: 5,
+  neededUserPermissions: [],
   usage: "",
   async execute(message: Message, args: string[]) {
     const result = await playAirhorn(message, args).catch((e: Error) => {
