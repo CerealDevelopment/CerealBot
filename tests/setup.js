@@ -1,7 +1,7 @@
 import fs from "fs";
-import * as fast_check from "fast-check";
+import * as fc from "fast-check";
 
-fast_check.configureGlobal({ numRuns: 10 })
+fc.configureGlobal({ numRuns: 10 })
 
 const PATH_TO_CONFIG = "config.json";
 const createConfigIfNotExist = async pathToConfig => {
