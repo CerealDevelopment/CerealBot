@@ -74,9 +74,9 @@ const notEmptyStrings = { minLength: 1 };
 it("should build a lot of valid embeds", async () => {
   await fc.assert(
     fc.asyncProperty(
-      fc.string(notEmptyStrings),
-      fc.string(notEmptyStrings),
-      fc.webUrl(notEmptyStrings),
+      fc.string(),
+      fc.string(),
+      fc.webUrl(),
       fc.string(notEmptyStrings),
       fc.integer(),
       fc.integer(),
