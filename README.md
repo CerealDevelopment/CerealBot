@@ -67,6 +67,10 @@ Using `opusenc` it is very simple to convert a `.wav` to `opus/.ogg`:
 
 `opusenc --bitrate 256 <input_file.wav> <output_file.ogg>`
 
+## Testing
+
+To run the tests, use `npm run tests`. Some of the tests are property based tests using `fast-check`. It requires a rerun with a specific seed, in case a test fails. Please consult the official docs on how to replay a seed: https://github.com/dubzzz/fast-check/blob/main/documentation/Tips.md#replay-after-failure.
+
 ## Used resources
 
 ### Pictures

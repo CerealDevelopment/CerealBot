@@ -4,6 +4,7 @@ module.exports = {
   name: "ping",
   description: "pong",
   hasArgs: false,
+  neededUserPermissions: [],
   usage: "",
   execute(message: Message) {
     const timeTaken = Date.now() - message.createdTimestamp;

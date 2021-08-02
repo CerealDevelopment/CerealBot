@@ -21,7 +21,7 @@ const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 const BOT_TOKEN: string = process.env.BOT_TOKEN ? process.env.BOT_TOKEN : DISCORD.BOT_TOKEN;
 
 client.login(BOT_TOKEN).catch((e: Error) => {
-  logger.error(`The 'BOT_TOKEN' is missing.\n${e}`);
+  logger.error(`The 'BOT_TOKEN' is missing.\n${e.stack}`);
   process.exit(1);
 });
 

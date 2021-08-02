@@ -9,6 +9,7 @@ module.exports = {
   name: "sum",
   description: "A cereal accumulation of given numbers!",
   hasArgs: true,
+  neededUserPermissions: [],
   usage: "<number1> <number2> ... <numberN>",
   async execute(message: Message, args: string[]) {
     const result = await sum(args);

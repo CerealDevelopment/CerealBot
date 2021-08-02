@@ -23,6 +23,7 @@ module.exports = {
   name: "about",
   description: "Prints the about info for the CerealBot :robot:",
   hasArgs: false,
+  neededUserPermissions: [],
   usage: "",
   async execute(message: Message) {
     const result = await getFormattedAnswer();
