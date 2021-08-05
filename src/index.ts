@@ -25,6 +25,16 @@ client.login(BOT_TOKEN).catch((e: Error) => {
   process.exit(1);
 });
 
+db.migrate
+  .latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES })
+  .then(isMemeDatabaseEmpty)
+  .then(isEmpty => {
+    if (isEmpty) {
+      clearDatabaseAndSyncWithImgur();
+    }
+  })
+  .catch(e => logger.error(e));
+
 const checkRights = (message: Message, rights): boolean => {
   const user = message.member;
   return user.hasPermission(rights);
@@ -75,15 +85,6 @@ const executeCommand = (message: Message, prefix: string, command: string, args:
 
 client.once("ready", () => {
   logger.info("Time to get cereal!");
-  db.migrate
-    .latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES })
-    .then(isMemeDatabaseEmpty)
-    .then(isEmpty => {
-      if (isEmpty) {
-        clearDatabaseAndSyncWithImgur();
-      }
-    })
-    .catch(e => logger.error(e));
 });
 
 cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
