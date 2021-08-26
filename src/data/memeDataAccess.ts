@@ -96,11 +96,16 @@ const isMemeDatabaseEmpty = async (): Promise<boolean | void> => {
     });
 };
 
-export {
-  fetchImgurResult,
-  selectRandomMeme,
-  removeAllMemeFromDatabase,
-  parseMemeResponseToArray,
-  addCollectionOfMemesToDatabase,
-  isMemeDatabaseEmpty,
+/**
+ * Clear database if old entries are available and fill with new memes
+ */
+const clearDatabaseAndSyncWithImgur = async () => {
+  const imgurResults = await fetchImgurResult().then(parseMemeResponseToArray);
+
+  if (!_.isEmpty(imgurResults)) {
+    removeAllMemeFromDatabase();
+    addCollectionOfMemesToDatabase(imgurResults);
+  }
 };
+
+export { selectRandomMeme, isMemeDatabaseEmpty, clearDatabaseAndSyncWithImgur };
