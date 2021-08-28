@@ -1,7 +1,7 @@
+import logger from "../../logging";
 import { Message } from "discord.js";
 import { getPrefix, setPrefix } from "../../data/prefixDataAccess";
 import { userPermissions } from "../../models/discordUserPermissions";
-import logger from "../../logging";
 
 const getGuildPrefix = async (guildId: string): Promise<string> => {
   const prefix: string | void = await getPrefix(guildId).catch(e => {
@@ -18,6 +18,7 @@ const setGuildPrefix = async (guildId: string, newPrefix: string): Promise<strin
 
 const dispatchPrefixFun = async (guildId: string, args: string[]): Promise<string> => {
   let reply: string;
+  const maxLengthOfPrefix = 3;
 
   if (!args.length || args.length === 0) {
     reply = await getGuildPrefix(guildId);
@@ -25,8 +26,8 @@ const dispatchPrefixFun = async (guildId: string, args: string[]): Promise<strin
     reply = "You provided too many arguments. The prefix should be exactly one with a length of one. E.g.: `$`";
     throw new Error(reply);
   } else {
-    if (args[0].length > 1) {
-      reply = "The provided prefix is too long. Make sure it has a length of 1";
+    if (args[0].length > maxLengthOfPrefix) {
+      reply = `The provided prefix is too long. Make sure it has a length of at most ${maxLengthOfPrefix}`;
       throw new Error(reply);
     } else {
       reply = await setGuildPrefix(guildId, args[0]);
@@ -49,4 +50,5 @@ module.exports = {
 
     message.reply(reply);
   },
+  dispatchPrefixFun,
 };
