@@ -1,17 +1,17 @@
-import { Client, Message } from "discord.js";
-import { DISCORD, DATABASE, MEME } from "../config.json";
-import { CommandInterface, getCommandMap } from "./utils";
 import _ from "lodash";
-import { getPrefixSetIfEmpty } from "./data/prefixDataAccess";
-import logger from "./logging";
 import cron from "node-cron";
-import { clearDatabaseAndSyncWithImgur, isMemeDatabaseEmpty } from "./data/memeDataAccess";
 import knex from "./data/database";
+import logger from "./logging";
+import { Client, Message } from "discord.js";
+import { CommandInterface, getCommandMap } from "./utils";
+import { DISCORD, DATABASE, MEME } from "../config.json";
+import { clearDatabaseAndSyncWithImgur, isMemeDatabaseEmpty } from "./data/memeDataAccess";
+import { getPrefixSetIfEmpty } from "./data/prefixDataAccess";
 
 const client: Client = new Client();
-const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
+const globalPrefix: string = DISCORD.PREFIX ?? "!";
 
-const BOT_TOKEN: string = process.env.BOT_TOKEN ? process.env.BOT_TOKEN : DISCORD.BOT_TOKEN;
+const BOT_TOKEN: string = process.env.BOT_TOKEN ?? DISCORD.BOT_TOKEN;
 
 // TODO Move also into module or at least move the imgur part into one function e.g. clearAndInitImgur
 knex.migrate
