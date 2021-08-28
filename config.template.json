@@ -8,19 +8,7 @@
         }
     },
     "DATABASE": {
-        "CLIENT": "sqlite3",
-        "NAME": "dev.database.sqlite",
-        "CONNECTION_STRING": "sqlite://data/database.sqlite",
-        "USE_NULL_AS_DEFAULT": true,
-        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations",
-        "KNEX_CONFIG": {
-            "client": "sqlite3",
-            "connection": {
-                "filename": "data/database.sqlite"
-            },
-            "debug": true,
-            "useNullAsDefault": true            
-        }
+        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {

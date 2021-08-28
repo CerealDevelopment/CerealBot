@@ -6,16 +6,15 @@ import { getPrefixSetIfEmpty } from "./data/prefixDataAccess";
 import logger from "./logging";
 import cron from "node-cron";
 import { clearDatabaseAndSyncWithImgur, isMemeDatabaseEmpty } from "./data/memeDataAccess";
-import { knex, Knex } from "knex";
+import knex from "./data/database";
 
-const db = knex(DATABASE.KNEX_CONFIG as Knex.Config);
 const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ? DISCORD.PREFIX : "!";
 
 const BOT_TOKEN: string = process.env.BOT_TOKEN ? process.env.BOT_TOKEN : DISCORD.BOT_TOKEN;
 
-// TODO Move also into module or at least move the imgur part into one function e.g. clearAndInitImgur  
-db.migrate
+// TODO Move also into module or at least move the imgur part into one function e.g. clearAndInitImgur
+knex.migrate
   .latest({ directory: DATABASE.PATH_TO_MIGRATION_FILES })
   .then(isMemeDatabaseEmpty)
   .then(isEmpty => {
@@ -33,7 +32,7 @@ client.login(BOT_TOKEN).catch((e: Error) => {
   process.exit(1);
 });
 
-const checkRights = (message: Message, rights): boolean => {
+const checkRights = (message: Message, rights: any): boolean => {
   const user = message.member;
   return user.hasPermission(rights);
 };
@@ -72,13 +71,13 @@ cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
 });
 
 client.on("message", async (message: Message) => {
-  const guildPrefix: string | void = await getPrefixSetIfEmpty(message.guild.id, globalPrefix).catch(e => {
+  const prefix: string = await getPrefixSetIfEmpty(message.guild.id, globalPrefix).catch(e => {
     logger.error(e);
   });
-  const prefix: string = guildPrefix ? guildPrefix : globalPrefix;
+
   if (!message.content.startsWith(prefix) || message.author.bot) {
     if (_.isEqual(_.trim(message.content.toLocaleLowerCase()), "prefix")) {
-      message.reply(`Prefix is \`${prefix}\``);
+      message.reply(`Prefix is '${prefix}'`);
     }
     return;
   }

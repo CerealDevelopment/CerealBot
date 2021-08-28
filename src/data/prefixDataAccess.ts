@@ -1,9 +1,9 @@
-import { knex as _knex, Knex } from "knex";
-import { DATABASE, DISCORD } from "../../config.json";
+import { Knex } from "knex";
+import knex from "./database";
+import { DISCORD } from "../../config.json";
 import logger from "../logging";
 import _ from "lodash";
 
-const knex = _knex(DATABASE.KNEX_CONFIG as Knex.Config);
 const guildTableName = "guild";
 
 /**
@@ -44,13 +44,12 @@ const getPrefix = async (guildId: string): Promise<string> => {
 };
 
 const getPrefixSetIfEmpty = async (guildId: string, newPrefix: string): Promise<any> => {
-  const res = await getPrefix(guildId).catch(e => {
-    logger.error(e);
+  const res = await getPrefix(guildId).catch(_ => {
     logger.info(`Guild Prefix for '${guildId}' was not found.`);
     setPrefix(guildId, newPrefix);
+    return getPrefix(guildId);
   });
-  if (res) return res;
-  else return getPrefix(guildId);
+  return res;
 };
 
 /**
@@ -60,8 +59,8 @@ const createPrefixTable = async (knex: Knex): Promise<void> => {
   return knex.schema
     .createTable(guildTableName, table => {
       table.string("id").primary().notNullable().unique();
-      table.string("prefix", 3).defaultTo(DISCORD.PREFIX); //.notNullable()
-      table.timestamp("created_at").defaultTo(knex.fn.now()); //.defaultTo(knex.fn.now(3)).notNullable();
+      table.string("prefix", 3).defaultTo(DISCORD.PREFIX);
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     })
     .catch(e => {
       logger.error(e);
