@@ -1,6 +1,7 @@
 {
     "DISCORD": {
         "PREFIX": "!",
+        "MAX_PREFIX_LENGTH": 3,
         "EMBED": {
             "DESC_CHAR_LIMIT": 2048,
             "FIELD_CHAR_LIMIT": 1024,

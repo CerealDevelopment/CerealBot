@@ -5,6 +5,7 @@ import logger from "../logging";
 import _ from "lodash";
 
 const guildTableName = "guild";
+const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
 
 /**
  * Sets new Prefix for a guild
@@ -13,7 +14,7 @@ const guildTableName = "guild";
  * @param prefixMaxLength - The maximum length of the prefix
  * @returns - A promise, that writes to the database
  */
-const setPrefix = async (guildId: string, newPrefix: string, prefixMaxLength: number = 3): Promise<any> => {
+const setPrefix = async (guildId: string, newPrefix: string, prefixMaxLength: number = maxPrefixLength): Promise<any> => {
   if (newPrefix.length > prefixMaxLength)
     throw Error(
       `Prefix is too long. It should have at most a length of ${prefixMaxLength}, but has a length of ${newPrefix.length}`
@@ -59,7 +60,7 @@ const createPrefixTable = async (knex: Knex): Promise<void> => {
   return knex.schema
     .createTable(guildTableName, table => {
       table.string("id").primary().notNullable().unique();
-      table.string("prefix", 3).defaultTo(DISCORD.PREFIX);
+      table.string("prefix", maxPrefixLength).defaultTo(DISCORD.PREFIX);
       table.timestamp("created_at").defaultTo(knex.fn.now());
     })
     .catch(e => {
