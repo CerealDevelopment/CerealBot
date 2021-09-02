@@ -1,3 +1,3 @@
-import { DATABASE } from "../../config.json";
+import knex from "./database";
 
-module.exports = DATABASE.KNEX_CONFIG;
+module.exports = knex;
