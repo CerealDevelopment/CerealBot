@@ -8,7 +8,6 @@ import logger from "../../logging";
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
 const airhornFiles: Array<string> = findFilesWithEnding(pathToAirhornFiles, config.AUDIO_FILE_FORMAT);
-//TODO add Keyv guild storage
 let lastIndexOfAudioFile: number = 0;
 
 const possibleErrors = (msg: Message = null) => {

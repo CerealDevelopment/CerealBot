@@ -1,6 +1,7 @@
 {
     "DISCORD": {
         "PREFIX": "!",
+        "MAX_PREFIX_LENGTH": 3,
         "EMBED": {
             "DESC_CHAR_LIMIT": 2048,
             "FIELD_CHAR_LIMIT": 1024,
@@ -8,19 +9,7 @@
         }
     },
     "DATABASE": {
-        "CLIENT": "sqlite3",
-        "NAME": "dev.database.sqlite",
-        "CONNECTION_STRING": "sqlite://dev.database.sqlite",
-        "USE_NULL_AS_DEFAULT": true,
-        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations",
-        "KNEX_CONFIG": {
-            "client": "sqlite3",
-            "connection": {
-                "filename": "dev.database.sqlite"
-            },
-            "debug": true,
-            "useNullAsDefault": true            
-        }
+        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
