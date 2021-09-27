@@ -93,28 +93,32 @@ const parseObjectToDrink = (drink_res: Object): Drink => {
   return drink;
 };
 
-const createDrinkEmbed = async (result: Drink): Promise<MessageEmbed> => {
+const createDrinkEmbed = async (result: Drink): Promise<{ embeds: MessageEmbed[] }> => {
   const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
 
-  const embed = new MessageEmbed()
-    .setColor(getCerealColor())
-    .setTitle(result.name)
-    .setDescription(result.category)
-    .setThumbnail(result.thumb_nail)
-    .addFields(
-      {
-        name: "Ingredients",
-        value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-      },
-      {
-        name: "Instructions",
-        value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-      }
-    );
+  const embed = {
+    embeds: [
+      new MessageEmbed()
+        .setColor(getCerealColor())
+        .setTitle(result.name)
+        .setDescription(result.category)
+        .setThumbnail(result.thumb_nail)
+        .addFields(
+          {
+            name: "Ingredients",
+            value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+          },
+          {
+            name: "Instructions",
+            value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+          }
+        ),
+    ],
+  };
   return embed;
 };
 
-const dispatch = async (args: string[]): Promise<MessageEmbed> => {
+const dispatch = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => {
   const baseUrl = `${COCKTAIL.BASE_URL}${COCKTAIL.API_VERSION}${COCKTAIL.API_KEY}`;
   let drink_url = baseUrl;
   if (args.length === 0) {
@@ -129,7 +133,7 @@ const dispatch = async (args: string[]): Promise<MessageEmbed> => {
   return mix_drink(drink_url);
 };
 
-const mix_drink = async (url: string): Promise<MessageEmbed> => {
+const mix_drink = async (url: string): Promise<{ embeds: MessageEmbed[] }> => {
   return await fetchDrinks(url).then(selectDrinkFromList).then(parseObjectToDrink).then(createDrinkEmbed);
 };
 
@@ -142,11 +146,15 @@ module.exports = {
   async execute(message: Message, args: string[]) {
     const result = await dispatch(args).catch(e => {
       logger.error(`Fetching drink "${args.join(" ")}" failed:\n${e}`);
-      const embed = new MessageEmbed()
-        .setColor(getCerealColor())
-        .setTitle("404 Drink not found")
-        .attachFiles(["./resources/pictures/errors/empty_glass.jpg"])
-        .setImage("attachment://empty_glass.jpg");
+      const embed = {
+        embeds: [
+          new MessageEmbed()
+            .setColor(getCerealColor())
+            .setTitle("404 Drink not found")
+            .setImage("attachment://empty_glass.jpg"),
+        ],
+        files: ["./resources/pictures/errors/empty_glass.jpg"],
+      };
       return embed;
     });
 

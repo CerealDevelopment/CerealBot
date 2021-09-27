@@ -2,16 +2,30 @@ import _ from "lodash";
 import cron from "node-cron";
 import knex from "./data/database";
 import logger from "./logging";
-import { Client, Message } from "discord.js";
+import { Client, ClientOptions, Message, Options, Intents } from "discord.js";
 import { CommandInterface, getCommandMap } from "./utils";
 import { DISCORD, DATABASE, MEME } from "../config.json";
 import { clearDatabaseAndSyncWithImgur, isMemeDatabaseEmpty } from "./data/memeDataAccess";
 import { getPrefixSetIfEmpty } from "./data/prefixDataAccess";
 
-const client: Client = new Client();
 const globalPrefix: string = DISCORD.PREFIX ?? "!";
 
 const BOT_TOKEN: string = process.env.BOT_TOKEN ?? DISCORD.BOT_TOKEN;
+const client: Client = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_VOICE_STATES,
+    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+  ],
+  token: BOT_TOKEN,
+  makeCache: Options.cacheWithLimits({
+    MessageManager: 200, // This is default
+    PresenceManager: 0,
+    // Add more class names here
+  }),
+} as ClientOptions);
 
 // TODO Move also into module or at least move the imgur part into one function e.g. clearAndInitImgur
 knex.migrate
@@ -34,7 +48,10 @@ client.login(BOT_TOKEN).catch((e: Error) => {
 
 const checkRights = (message: Message, rights: any): boolean => {
   const user = message.member;
-  return user.hasPermission(rights);
+  rights.forEach(right => {
+    if (user.permissions.has(right)) return true;
+  });
+  return false;
 };
 
 const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {

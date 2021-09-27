@@ -1,9 +1,22 @@
-import fs from "fs";
 import _ from "lodash";
-import { Message, VoiceConnection } from "discord.js";
 import { findFilesWithEnding, getRandomNumber } from "../../utils";
 import config from "../../../config.json";
 import logger from "../../logging";
+
+import { VoiceChannel, Message } from "discord.js";
+import { createDiscordJSAdapter } from "../../adapter";
+import {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  entersState,
+  StreamType,
+  AudioPlayerState,
+  AudioPlayerStatus,
+  VoiceConnectionStatus,
+} from "@discordjs/voice";
+
+const player = createAudioPlayer();
 
 const pathToAirhornFiles: string = "./resources/sounds/airhorns";
 
@@ -19,6 +32,32 @@ const possibleErrors = (msg: Message = null) => {
     noFilesFound: "No sound files are found for Airhorn",
     notInVoiceChannel: `The user "${authorId}" was not in a channel`,
   };
+};
+
+const playSong = async (file: string) => {
+  const resource = createAudioResource(file, {
+    inputType: StreamType.Arbitrary,
+  });
+
+  player.play(resource);
+
+  return entersState(player, AudioPlayerStatus.Playing, 5e3);
+};
+
+const connectToChannel = async (channel: VoiceChannel) => {
+  const connection = joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: createDiscordJSAdapter(channel),
+  });
+
+  try {
+    await entersState(connection, VoiceConnectionStatus.Ready, 30e3);
+    return connection;
+  } catch (error) {
+    connection.destroy();
+    throw error;
+  }
 };
 
 /**
@@ -47,27 +86,28 @@ const audioFileNames: Object = _.reduce(
  */
 const playAudio = async (message: Message, chosenFile: string) => {
   checkUserInChannel(message);
-  const audioFile: fs.ReadStream = fs.createReadStream(chosenFile);
-  const connection: VoiceConnection = await message.member.voice.channel.join();
+  const channel: VoiceChannel = message.member?.voice.channel as VoiceChannel;
+  if (channel) {
+    try {
+      const connection = await connectToChannel(channel);
+      connection.subscribe(player);
+      message.reply("Playing now!");
 
-  const dispatcher = connection.play(audioFile, {
-    type: "ogg/opus",
-    volume: 0.5,
-    highWaterMark: 50,
-  });
+      console.log("Song is ready to play!");
+      await playSong(chosenFile);
 
-  dispatcher.on("start", () => {
-    logger.info(`${chosenFile} is now playing!`);
-  });
-
-  dispatcher.on("finish", () => {
-    logger.info(`${chosenFile} has finished playing!`);
-    dispatcher.destroy();
-    connection.disconnect();
-  });
-
-  dispatcher.on("error", logger.error);
-  connection.on("error", logger.error);
+      // TODO check if this leads to memory leak
+      player.addListener("stateChange", (oldState: AudioPlayerState, newState: AudioPlayerState) => {
+        if (oldState.status === AudioPlayerStatus.Playing && newState.status === AudioPlayerStatus.Idle) {
+          connection.disconnect();
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    message.reply("Join a voice channel then try again!");
+  }
 };
 
 const checkAudioFiles = (numberOfAudioFiles: number) => {

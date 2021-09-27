@@ -1,4 +1,4 @@
-ARG VERSION=16.9.0-buster
+ARG VERSION=16.9.1-buster
 FROM node:${VERSION}
 ENV NODE_ENV production
 ENV BOT_TOKEN=""

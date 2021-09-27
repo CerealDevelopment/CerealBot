@@ -38,12 +38,12 @@ it("should build valid embed", async () => {
     thumps_down: "thumps_down",
   };
 
-  const result = await buildEmbed(answer);
+  const result = await buildEmbed(answer).then(x => x.embeds[0]);
 
   expect(result).toBeTruthy();
   expect(result).toBeInstanceOf(MessageEmbed);
 
-  expect(result.hexColor).toBe(getCerealColor());
+  expect(result.hexColor).toBe(`#${getCerealColor()}`);
   expect(result.title).toBe(answer.word);
   expect(result.url).toBe(answer.permalink);
   expect(result.fields[0].value).toBe(answer.definition);
@@ -58,12 +58,12 @@ it("should build valid embed with missing fields", async () => {
     example: "field2",
   };
 
-  const result = await buildEmbed(answer);
+  const result = await buildEmbed(answer).then(x => x.embeds[0]);
 
   expect(result).toBeTruthy();
   expect(result).toBeInstanceOf(MessageEmbed);
 
-  expect(result.hexColor).toBe(getCerealColor());
+  expect(result.hexColor).toBe(`#${getCerealColor()}`);
   expect(result.title).toBe(answer.word);
   expect(result.url).toBe(answer.permalink);
   expect(result.fields[0].value).toBe(answer.definition);
@@ -89,12 +89,12 @@ it("should build a lot of valid embeds", async () => {
           thumps_up: thumbs_up,
           thumps_down: thumbs_down,
         };
-        const result = await buildEmbed(answer);
+        const result = await buildEmbed(answer).then(x => x.embeds[0]);
 
         expect(result).toBeTruthy();
         expect(result).toBeInstanceOf(MessageEmbed);
 
-        expect(result.hexColor).toBe(getCerealColor());
+        expect(result.hexColor).toBe(`#${getCerealColor()}`);
         expect(result.title).toBe(answer.word);
         expect(result.url).toBe(answer.permalink);
         expect(result.fields[0].value).toBe(answer.definition);

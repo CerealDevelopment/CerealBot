@@ -14,7 +14,11 @@ const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
  * @param prefixMaxLength - The maximum length of the prefix
  * @returns - A promise, that writes to the database
  */
-const setPrefix = async (guildId: string, newPrefix: string, prefixMaxLength: number = maxPrefixLength): Promise<any> => {
+const setPrefix = async (
+  guildId: string,
+  newPrefix: string,
+  prefixMaxLength: number = maxPrefixLength
+): Promise<any> => {
   if (newPrefix.length > prefixMaxLength)
     throw Error(
       `Prefix is too long. It should have at most a length of ${prefixMaxLength}, but has a length of ${newPrefix.length}`
