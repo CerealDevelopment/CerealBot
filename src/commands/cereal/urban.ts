@@ -1,10 +1,9 @@
-import { Message, MessageEmbed, MessagePayload } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import querystring from "querystring";
 import fetch from "node-fetch";
 import { trim, getCerealColor } from "../../utils";
 import { URBAN, DISCORD } from "../../../config.json";
 import logger from "../../logging";
-import { string } from "fast-check";
 
 interface Answer {
   word: string;
