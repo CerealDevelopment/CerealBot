@@ -11,15 +11,19 @@ import logger from "../../logging";
  * @param meme A meme
  * @returns A MessageEmbed with meme content
  */
-const createMessageEmbed = (meme: MemeResource): MessageEmbed => {
+const createMessageEmbed = (meme: MemeResource): { embeds: [MessageEmbed] } => {
   const title = meme.title ?? "";
   const desc = meme.description ?? "";
   const link = meme.link;
-  return new MessageEmbed()
-    .setColor(getCerealColor())
-    .setTitle(trim(title, DISCORD.EMBED.TITLE_CHAR_LIMIT))
-    .setDescription(trim(desc, DISCORD.EMBED.DESC_CHAR_LIMIT))
-    .setImage(link);
+  return {
+    embeds: [
+      new MessageEmbed()
+        .setColor(getCerealColor())
+        .setTitle(trim(title, DISCORD.EMBED.TITLE_CHAR_LIMIT))
+        .setDescription(trim(desc, DISCORD.EMBED.DESC_CHAR_LIMIT))
+        .setImage(link),
+    ],
+  };
 };
 
 module.exports = {

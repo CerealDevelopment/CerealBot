@@ -37,29 +37,33 @@ const getFirstAnswer = (list: Answer[]): Answer => {
   return answer;
 };
 
-const buildEmbed = async (answer: Answer): Promise<MessageEmbed> => {
-  const embed = new MessageEmbed()
-    .setColor(getCerealColor())
-    .setTitle(answer.word)
-    .setURL(answer.permalink)
-    .addFields(
-      {
-        name: "Definition",
-        value: trim(answer.definition, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-      },
-      {
-        name: "Example",
-        value: trim(answer.example, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-      },
-      {
-        name: "Rating",
-        value: `${answer.thumbs_up} :thumbsup: ${answer.thumbs_down} :thumbsdown:`,
-      }
-    );
+const buildEmbed = async (answer: Answer): Promise<{ embeds: MessageEmbed[] }> => {
+  const embed = {
+    embeds: [
+      new MessageEmbed()
+        .setColor(getCerealColor())
+        .setTitle(answer.word)
+        .setURL(answer.permalink)
+        .addFields(
+          {
+            name: "Definition",
+            value: trim(answer.definition, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+          },
+          {
+            name: "Example",
+            value: trim(answer.example, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+          },
+          {
+            name: "Rating",
+            value: `${answer.thumbs_up} :thumbsup: ${answer.thumbs_down} :thumbsdown:`,
+          }
+        ),
+    ],
+  };
   return embed;
 };
 
-const urban = async (args: string[]): Promise<MessageEmbed> => {
+const urban = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => {
   return await buildUrbanUrl(args).then(fetchUrban).then(checkResponse).then(getFirstAnswer).then(buildEmbed);
 };
 
@@ -72,7 +76,9 @@ module.exports = {
   async execute(message: Message, args: string[]) {
     const result = await urban(args).catch(e => {
       logger.error(e);
-      return `No results found for **${args.join(" ")}**.`;
+      return {
+        embeds: [new MessageEmbed().setTitle(`No results found for **${args.join(" ")}**.`).setColor(getCerealColor())],
+      };
     });
 
     message.channel.send(result);

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Collection, Message } from "discord.js";
+import { Collection, Message, HexColorString } from "discord.js";
 import _ from "lodash";
 
 /**
@@ -28,8 +28,8 @@ const getRandomNumber = (maxValue: number, lastNumber: number = 0): number => {
  * Simply holds the most cereal color code.
  * @returns - The most cereal color code.
  */
-const getCerealColor = (): string => {
-  return "#ffd203";
+const getCerealColor = (): HexColorString => {
+  return "ffd203" as HexColorString;
 };
 
 /**
