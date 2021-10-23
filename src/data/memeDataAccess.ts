@@ -8,7 +8,7 @@ const headers = {
   Accept: "application/json",
   Authorization: process.env.IMGUR_AUTHORIZATION ?? IMGUR.AUTHORIZATION,
 };
-const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
+const mimeImageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
 
 /**
  * Call Imgur api and fetch result
@@ -27,25 +27,37 @@ const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
   if (!result) {
     throw new Error("result must not be null.");
   }
-  const imgurResults: Array<undefined | MemeResource> = _.flatMap(result["data"]["items"], (item: JSON) => {
+  return _.flatMap(result["data"]["items"], (item: JSON) => {
     if (item["is_album"]) {
-      return _.map(item["images"], createNewEntry);
-    } else {
+      return _.map(_.filter(item["images"], isImgurJsonUsable));
+    } else if (isImgurJsonUsable(item)) {
       return createNewEntry(item);
     }
   });
-  return _.compact(imgurResults);
 };
 
 /**
  * A single meme response is parsed to a MemeResource object
  * @param memeResource Single meme resource as JSON
- * @returns Single MemeResource or undefined
+ * @returns Single MemeResource
  */
-const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
-  if (imageTypes.has(memeResource["type"])) {
-    return new MemeResource(memeResource);
-  }
+const createNewEntry = (memeResource: JSON): MemeResource => {
+  return new MemeResource(memeResource);
+};
+
+/**
+ * An Imgur JSON is checked, if the required attributes are set and not empty or null
+ * @param memeResource Single meme resource as JSON
+ * @returns A boolean value
+ */
+
+const isImgurJsonUsable = (memeResource: JSON): boolean => {
+  return (
+    !_.isEmpty(memeResource) &&
+    !_.isEmpty(memeResource["id"]) &&
+    !_.isEmpty(memeResource["link"]) &&
+    mimeImageTypes.has(memeResource["type"])
+  );
 };
 
 /**
@@ -94,16 +106,13 @@ const isMemeDatabaseEmpty = async (): Promise<boolean | void> => {
     });
 };
 
-/**
- * Clear database if old entries are available and fill with new memes
- */
-const clearDatabaseAndSyncWithImgur = async () => {
-  const imgurResults = await fetchImgurResult().then(parseMemeResponseToArray);
-
-  if (!_.isEmpty(imgurResults)) {
-    removeAllMemeFromDatabase();
-    addCollectionOfMemesToDatabase(imgurResults);
-  }
+export {
+  fetchImgurResult,
+  selectRandomMeme,
+  removeAllMemeFromDatabase,
+  parseMemeResponseToArray,
+  addCollectionOfMemesToDatabase,
+  isMemeDatabaseEmpty,
+  createNewEntry,
+  isImgurJsonUsable,
 };
-
-export { selectRandomMeme, isMemeDatabaseEmpty, clearDatabaseAndSyncWithImgur };
