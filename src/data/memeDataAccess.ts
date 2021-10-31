@@ -73,11 +73,7 @@ const isImgurJsonUsable = (memeResource: JSON): boolean => {
  * @returns Random meme
  */
 const selectRandomMeme = async (): Promise<MemeResource> => {
-  const [result] = await knex
-    .select("*")
-    .from<MemeResource>(MEME.TABLE_NAME)
-    .orderByRaw("RANDOM()")
-    .limit(1);
+  const [result] = await knex.select("*").from<MemeResource>(MEME.TABLE_NAME).orderByRaw("RANDOM()").limit(1);
   if (_.isEmpty(result)) {
     throw new Error("No entries in database present.");
   }
@@ -131,5 +127,5 @@ export {
   clearDatabaseAndSyncWithImgur,
   parseMemeResponseToArray,
   isImgurJsonUsable,
-  createNewMemeResource as createNewEntry,
+  createNewMemeResource,
 };

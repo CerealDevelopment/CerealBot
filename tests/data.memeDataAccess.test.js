@@ -1,4 +1,4 @@
-import { createNewEntry, parseMemeResponseToArray, isImgurJsonUsable } from "../src/data/memeDataAccess";
+import { createNewMemeResource, parseMemeResponseToArray, isImgurJsonUsable } from "../src/data/memeDataAccess";
 import { MemeResource } from "../src/models/meme";
 
 const memeResponseWithImage = {
@@ -90,9 +90,9 @@ describe("Test parsing of multiple memes", () => {
   });
 });
 
-describe("Test if createNewEntry() returns MemeResource", () => {
+describe("Test if createNewMemeResource() returns MemeResource", () => {
   it("should return a MemeResource instance", () => {
-    let actualMeme = createNewEntry(memeResponseWithImage);
+    let actualMeme = createNewMemeResource(memeResponseWithImage);
     expect(actualMeme).toBeDefined();
     expect(actualMeme).toBeInstanceOf(MemeResource);
   });
