@@ -8,7 +8,7 @@ const headers = {
   Accept: "application/json",
   Authorization: process.env.IMGUR_AUTHORIZATION ?? IMGUR.AUTHORIZATION,
 };
-const imageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
+const mimeImageTypes: Set<string> = new Set(["image/jpeg", "image/png"]);
 
 /**
  * Call Imgur api and fetch result
@@ -27,25 +27,45 @@ const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
   if (!result) {
     throw new Error("result must not be null.");
   }
-  const imgurResults: Array<undefined | MemeResource> = _.flatMap(result["data"]["items"], (item: JSON) => {
+  return _.flatMap(result["data"]["items"], (item: JSON) => {
+    let parsedMemeResources: Array<MemeResource> = [];
     if (item["is_album"]) {
-      return _.map(item["images"], createNewEntry);
+      item["images"].forEach((imageObject: JSON) => {
+        if (isImgurJsonUsable(imageObject)) {
+          parsedMemeResources.push(createNewMemeResource(imageObject));
+        }
+      });
     } else {
-      return createNewEntry(item);
+      if (isImgurJsonUsable(item)) {
+        parsedMemeResources.push(createNewMemeResource(item));
+      }
     }
+    return parsedMemeResources;
   });
-  return _.compact(imgurResults);
 };
 
 /**
  * A single meme response is parsed to a MemeResource object
- * @param memeResource Single meme resource as JSON
- * @returns Single MemeResource or undefined
+ * @param singleMemeJsonObject Single meme resource as JSON
+ * @returns Single MemeResource
  */
-const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
-  if (imageTypes.has(memeResource["type"])) {
-    return new MemeResource(memeResource);
-  }
+const createNewMemeResource = (singleMemeJsonObject: JSON): MemeResource => {
+  return new MemeResource(singleMemeJsonObject);
+};
+
+/**
+ * An Imgur JSON is checked, if the required attributes are set and not empty or null
+ * @param memeResource Single meme resource as JSON
+ * @returns A boolean value
+ */
+const isImgurJsonUsable = (memeResource: JSON): boolean => {
+  return (
+    !_.isEmpty(memeResource) &&
+    !_.isEmpty(memeResource["id"]) &&
+    !_.isEmpty(memeResource["link"]) &&
+    (memeResource["nsfw"] === null || memeResource["nsfw"] === false) &&
+    mimeImageTypes.has(memeResource["type"])
+  );
 };
 
 /**
@@ -55,7 +75,6 @@ const createNewEntry = (memeResource: JSON): MemeResource | undefined => {
 const selectRandomMeme = async (): Promise<MemeResource> => {
   const [result] = await knex
     .select("*")
-    .whereNull("nsfw")
     .from<MemeResource>(MEME.TABLE_NAME)
     .orderByRaw("RANDOM()")
     .limit(1);
@@ -106,4 +125,11 @@ const clearDatabaseAndSyncWithImgur = async () => {
   }
 };
 
-export { selectRandomMeme, isMemeDatabaseEmpty, clearDatabaseAndSyncWithImgur };
+export {
+  selectRandomMeme,
+  isMemeDatabaseEmpty,
+  clearDatabaseAndSyncWithImgur,
+  parseMemeResponseToArray,
+  isImgurJsonUsable,
+  createNewMemeResource as createNewEntry,
+};
