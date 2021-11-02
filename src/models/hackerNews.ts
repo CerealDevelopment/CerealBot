@@ -22,6 +22,7 @@ class HackerNews {
   ) {
     this.by = by;
     this.descendants = descendants;
+    this.id = id;
     this.kids = kids;
     this.score = score;
     this.time = time;
