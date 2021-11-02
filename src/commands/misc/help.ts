@@ -7,7 +7,7 @@ const prefix: string = config.DISCORD.PREFIX ? config.DISCORD.PREFIX : "!";
 const getFormattedAnswer = async (args: string[]): Promise<string> => {
   if (!args.length) {
     // Simple list of all commands if no arg is provided
-    const commandString = getCommandMap().keys.reduce(
+    const commandString = Array.from(getCommandMap().keys()).reduce(
       (total: string, currentVal: string, index: number, array: string[]) => {
         const joiner = "\n- ";
         const str = `${total}${joiner}${currentVal}`;
