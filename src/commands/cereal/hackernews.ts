@@ -44,12 +44,34 @@ const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
   return listOfNews;
 };
 
-const createNews = async (url: string, createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
+const parseArgs = (args: string[]): number => {
+  let numberOfPosts = 5;
+
+  if (args) {
+    if (args.length === 1) {
+      const parsedArg = parseInt(args[0]);
+      if (_.isInteger(parsedArg)) {
+        numberOfPosts = Math.abs(parsedArg);
+        if (numberOfPosts >= 10) {
+          numberOfPosts = 10;
+        }
+      } else {
+        throw new Error("Argument not parsable");
+      }
+    } else {
+      throw new Error("Too many arguments");
+    }
+  }
+  return numberOfPosts;
+};
+
+const createNews = async (url: string, args: string[], createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
   const response = await fetchHackerNews(url).then(checkValidResponse);
   if (_.isError(response)) {
     return;
   }
-  const topPosts = takeTopPosts(response, 5);
+  const numberOfPosts = parseArgs(args);
+  const topPosts = takeTopPosts(response, numberOfPosts);
   const hackerNews = await getNewsStories(topPosts);
 
   return createPosts(hackerNews);
@@ -60,9 +82,9 @@ module.exports = {
   description: "Get the latest HackerNews",
   hasArgs: false,
   neededUserPermissions: [],
-  usage: "",
+  usage: "<number_of_posts>",
   async execute(message: Message, args: string[]) {
-    const createHackerNews = _.partial(createNews, H.BASE_URL + H.BESTSTORIES + H.URL_SUFFIX);
+    const createHackerNews = _.partial(createNews, H.BASE_URL + H.BESTSTORIES + H.URL_SUFFIX, args);
     const discordPost = (news: HackerNews[]): { embeds: MessageEmbed[] } => {
       const embed = {
         embeds: _.map(news, n => {
