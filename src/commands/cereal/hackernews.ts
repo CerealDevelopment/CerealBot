@@ -10,7 +10,7 @@ const fetchHackerNews = async (url: string): Promise<Object> => {
   return await fetch(url, {}).then(response => response.json());
 };
 
-const checkValidResponse = (res: Object): number[] => {
+const checkValidResponseOfTopHackerNews = (res: Object): number[] => {
   if (_.isArrayLike(res)) {
     if (_.isInteger(res[0])) {
       return res as number[];
@@ -23,6 +23,11 @@ const takeTopPosts = (res: number[], numberOfPosts: number): number[] => {
   return res.slice(0, numberOfPosts);
 };
 
+/**
+ * Get news stories based on a list of story ids
+ * @param stories = Array of ids of stories
+ * @returns Array of HackerNews
+ */
 const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
   const baseURL = H.BASE_URL;
   let listOfNews = [];
@@ -44,6 +49,11 @@ const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
   return listOfNews;
 };
 
+/**
+ * Parse args. The args can only be integers and 0 < x < 11 
+ * @param args 
+ * @returns 
+ */
 const parseArgs = (args: string[]): number => {
   let numberOfPosts = 5;
 
@@ -66,7 +76,7 @@ const parseArgs = (args: string[]): number => {
 };
 
 const createNews = async (url: string, args: string[], createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
-  const response = await fetchHackerNews(url).then(checkValidResponse);
+  const response = await fetchHackerNews(url).then(checkValidResponseOfTopHackerNews);
   if (_.isError(response)) {
     return;
   }
