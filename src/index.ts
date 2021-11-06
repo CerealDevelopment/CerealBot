@@ -98,7 +98,7 @@ client.on("message", async (message: Message) => {
     return;
   }
 
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const args = message.content.slice(prefix.length).trim().split(/ +/).map(_.toLower);
   const command = args.shift().toLocaleLowerCase();
   logger.info(`Called '${command}' by '${message.author.id}' in '${message.guild.id}'`);
   const executedCommand = _.attempt(executeCommand, message, prefix, command, args);
