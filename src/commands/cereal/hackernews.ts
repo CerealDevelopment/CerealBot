@@ -25,7 +25,7 @@ const takeTopPosts = (res: number[], numberOfPosts: number): number[] => {
 
 /**
  * Get news stories based on a list of story ids
- * @param stories = Array of ids of stories
+ * @param stories Array of ids of stories
  * @returns Array of HackerNews
  */
 const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
@@ -50,9 +50,9 @@ const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
 };
 
 /**
- * Parse args. The args can only be integers and 0 < x < 11 
- * @param args 
- * @returns 
+ * Parse args. The args can only be integers and 0 < x < 11
+ * @param args arguments of the command
+ * @returns Parsed args to get the number of posts to create
  */
 const parseArgs = (args: string[]): number => {
   let numberOfPosts = 5;
@@ -75,6 +75,13 @@ const parseArgs = (args: string[]): number => {
   return numberOfPosts;
 };
 
+/**
+ * Get the news from Hackernews and return a funktion to create a properly formatted output
+ * @param url URL of hackernews
+ * @param args Arguments of the command
+ * @param createPosts A Funktion to create a post
+ * @returns A Funktion that creates a post
+ */
 const createNews = async (url: string, args: string[], createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
   const response = await fetchHackerNews(url).then(checkValidResponseOfTopHackerNews);
   if (_.isError(response)) {
