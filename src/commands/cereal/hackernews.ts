@@ -50,37 +50,38 @@ const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
 };
 
 /**
- * Parse args. The args can only be integers and 0 < x < 11
+ * Parse args. The args can only be integers
  * @param args arguments of the command
  * @returns Parsed args to get the number of posts to create
  */
-const parseArgs = (args: string[]): number => {
+const parseArgs = (args: string[], min: number = 1, max: number = 10): number => {
   let numberOfPosts = 5;
 
   if (args) {
-    if (args.length === 1) {
-      const parsedArg = parseInt(args[0]);
-      if (_.isInteger(parsedArg)) {
-        numberOfPosts = Math.abs(parsedArg);
-        if (numberOfPosts >= 10) {
-          numberOfPosts = 10;
+    if (args.length !== 0) {
+      if (args.length === 1) {
+        const parsedArg = parseInt(args[0]);
+        if (_.isInteger(parsedArg)) {
+          numberOfPosts = Math.abs(parsedArg);
+          numberOfPosts = Math.max(parsedArg, min);
+          numberOfPosts = Math.min(parsedArg, max);
+        } else {
+          throw new Error("Argument not parsable");
         }
       } else {
-        throw new Error("Argument not parsable");
+        throw new Error("Too many arguments");
       }
-    } else {
-      throw new Error("Too many arguments");
     }
   }
   return numberOfPosts;
 };
 
 /**
- * Get the news from Hackernews and return a funktion to create a properly formatted output
- * @param url URL of hackernews
+ * Get the news from Hackernews and return a function to create a properly formatted output
+ * @param url URL of Hackernews
  * @param args Arguments of the command
- * @param createPosts A Funktion to create a post
- * @returns A Funktion that creates a post
+ * @param createPosts A function to create a post
+ * @returns A function that creates a post
  */
 const createNews = async (url: string, args: string[], createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
   const response = await fetchHackerNews(url).then(checkValidResponseOfTopHackerNews);
@@ -100,7 +101,7 @@ module.exports = {
   hasArgs: false,
   neededUserPermissions: [],
   usage: "<number_of_posts>",
-  async execute(message: Message, args: string[]) {
+  async execute(message: any, args: string[]) {
     const createHackerNews = _.partial(createNews, H.BASE_URL + H.BESTSTORIES + H.URL_SUFFIX, args);
     const discordPost = (news: HackerNews[]): { embeds: MessageEmbed[] } => {
       const embed = {
@@ -120,6 +121,18 @@ module.exports = {
       return embed;
     };
 
+    const consolePost = (news: HackerNews[]): string[] => {
+      const out = _.map(news, n => {
+        return `
+          Title: ${n.title},
+          Author: ${n.by},
+          URL: ${n.url}
+          `;
+      });
+
+      return out;
+    };
+
     if (message instanceof Message) {
       const news = await createHackerNews(discordPost).catch(e => {
         logger.error(e);
@@ -128,8 +141,15 @@ module.exports = {
         };
       });
       message.channel.send(news);
+    } else if (message instanceof String) {
+      const news = await createHackerNews(consolePost).catch(e => {
+        logger.error(e);
+        return e;
+      });
+      return news;
     } else {
       logger.error(`Unknown message type: ${typeof message}`);
     }
   },
+  getNewsStories,
 };
