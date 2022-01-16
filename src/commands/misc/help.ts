@@ -1,13 +1,11 @@
 import { Message } from "discord.js";
 import { CommandInterface, getCommandMap } from "../../utils";
-import config from "../../../config.json";
+import { getPrefix } from "../../data/prefixDataAccess";
 
-const prefix: string = config.DISCORD.PREFIX ? config.DISCORD.PREFIX : "!";
-
-const getFormattedAnswer = async (args: string[]): Promise<string> => {
+const getFormattedAnswer = async (args: string[], prefix: string): Promise<string> => {
   if (!args.length) {
     // Simple list of all commands if no arg is provided
-    const commandString = getCommandMap().keys.reduce(
+    const commandString = Array.from(getCommandMap().keys()).reduce(
       (total: string, currentVal: string, index: number, array: string[]) => {
         const joiner = "\n- ";
         const str = `${total}${joiner}${currentVal}`;
@@ -46,7 +44,8 @@ module.exports = {
   neededUserPermissions: [],
   usage: "",
   async execute(message: Message, args: string[]) {
-    const result = await getFormattedAnswer(args);
+    const prefix: string = await getPrefix(message.guildId);
+    const result = await getFormattedAnswer(args, prefix);
     message.reply(result);
   },
   getFormattedAnswer,

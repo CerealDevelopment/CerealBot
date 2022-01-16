@@ -45,18 +45,43 @@ Current required items in config.json:
 {
     "DISCORD": {
         "PREFIX": "!",
+        "MAX_PREFIX_LENGTH": 3,
         "EMBED": {
-            "TITLE_CHAR_LIMIT": 256,
-            "DESC_CHAR_LIMIT": 2048
+            "DESC_CHAR_LIMIT": 2048,
+            "FIELD_CHAR_LIMIT": 1024,
+            "TITLE_CHAR_LIMIT": 256
         }
     },
     "DATABASE": {
-        "CONNECTION_STRING": "sqlite://database.sqlite"
+        "PATH_TO_MIGRATION_FILES": "./lib/data/migrations"
     },
     "AUDIO_FILE_FORMAT": ".ogg",
     "IMGUR": {
-        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1",
-        "AUTHORIZATION": "Client-ID <API_KEY>"
+        "AUTHORIZATION": "Client-ID <API_KEY>",
+        "URL": "https://api.imgur.com/3/gallery/t/meme/top/week/1"
+    },
+    "HACKERNEWS": {
+        "BASE_URL": "https://hacker-news.firebaseio.com/v0",
+        "BESTSTORIES": "/beststories",
+        "STORY": "/item/",
+        "URL_SUFFIX": ".json",
+        "COMMENT_URL": "https://news.ycombinator.com/item?id="
+    },
+    "URBAN": {
+        "URL": "https://api.urbandictionary.com/v0/define?"
+    },
+    "COCKTAIL": {
+        "BASE_URL": "https://www.thecocktaildb.com/api/json/",
+        "API_VERSION": "v1/",
+        "API_KEY": "1/",
+        "RANDOM_URL": "random.php",
+        "SEARCH_INGREDIENT": "filter.php?i=",
+        "SEARCH_LETTER_URL": "search.php?f=",
+        "SEARCH_URL": "search.php?s="
+    },
+    "MEME": {
+        "SYNC_AT_MIDNIGHT": "0 0 * * *",
+        "TABLE_NAME": "meme"
     }
 }
 ```
