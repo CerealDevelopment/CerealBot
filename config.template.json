@@ -1,5 +1,6 @@
 {
     "DISCORD": {
+        "BOT_TOKEN": "<DISCORD_BOT_TOKEN>",
         "PREFIX": "!",
         "MAX_PREFIX_LENGTH": 3,
         "EMBED": {
