@@ -47,10 +47,10 @@ client.login(BOT_TOKEN).catch((e: Error) => {
 
 const checkRights = (message: Message, rights: any): boolean => {
   const user = message.member;
-  rights.forEach(right => {
-    if (user.permissions.has(right)) return true;
-  });
-  return false;
+  const res = _.reduce(rights, (cur, right) => {
+    return cur || user.permissions.has(right)
+  }, false)
+  return res;
 };
 
 const executeCommand = (message: Message, prefix: string, command: string, args: string[]) => {
