@@ -62,7 +62,7 @@ const parseArgs = (args: string[], min: number = 1, max: number = 10): number =>
       if (args.length === 1) {
         const parsedArg = parseInt(args[0]);
         if (_.isInteger(parsedArg)) {
-          numberOfPosts = keepIntInRange(parsedArg, 1, 5);
+          numberOfPosts = keepIntInRange(parsedArg, min, max);
         } else {
           throw new Error("Argument not parsable");
         }
