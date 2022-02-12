@@ -62,6 +62,20 @@ const trim = (str: string, max: number): string => {
   return _.truncate(str, { length: max });
 };
 
+/**
+ * Create a positive number between a min a max value
+ * @param value The number to check
+ * @param min The minimal value
+ * @param max The maximum value
+ * @returns An integer in range between min and max
+ */
+const keepIntInRange = (value: number, min: number = 1, max: number = 10): number => {
+  let numberOfPosts = Math.abs(value);
+  numberOfPosts = Math.max(numberOfPosts, min);
+  numberOfPosts = Math.min(numberOfPosts, max);
+  return numberOfPosts;
+};
+
 interface CommandInterface {
   name: string;
   description: string;
@@ -71,4 +85,4 @@ interface CommandInterface {
   execute(message: Message, args?: Array<string>);
 }
 
-export { findFilesWithEnding, getRandomNumber, getCommandMap, CommandInterface, getCerealColor, trim };
+export { findFilesWithEnding, getRandomNumber, getCommandMap, CommandInterface, getCerealColor, trim, keepIntInRange };
