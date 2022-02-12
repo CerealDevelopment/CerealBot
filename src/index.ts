@@ -47,9 +47,13 @@ client.login(BOT_TOKEN).catch((e: Error) => {
 
 const checkRights = (message: Message, rights: any): boolean => {
   const user = message.member;
-  const res = _.reduce(rights, (cur, right) => {
-    return cur || user.permissions.has(right)
-  }, false)
+  const res = _.reduce(
+    rights,
+    (cur, right) => {
+      return cur || user.permissions.has(right);
+    },
+    false
+  );
   return res;
 };
 
