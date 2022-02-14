@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
 import _ from "lodash";
-import { getCerealColor, trim, getRandomNumber } from "../../utils";
+import { getCerealColor, trim, getRandomNumber, keepIntInRange } from "../../utils";
 import { COCKTAIL, DISCORD } from "../../../config.json";
 import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
@@ -84,38 +84,33 @@ const parseObjectToDrink = (drink_res: Object): Drink => {
   const category = drink_res["strCategory"];
   const instructions = drink_res["strInstructions"];
   const thumb_nail = drink_res["strDrinkThumb"];
-  const glas = drink_res["strGlass"];
+  const glass = drink_res["strGlass"];
   const picture = drink_res["strImageSource"];
 
   const ingredients = parseIngredientsFieldsList(drink_res);
 
-  const drink = new Drink(_.toInteger(id), name, category, instructions, thumb_nail, glas, ingredients, picture);
+  const drink = new Drink(_.toInteger(id), name, category, instructions, thumb_nail, glass, ingredients, picture);
   return drink;
 };
 
-const createDrinkEmbed = async (result: Drink): Promise<{ embeds: MessageEmbed[] }> => {
+const createDrinkEmbed = async (result: Drink): Promise<MessageEmbed> => {
   const ingredients = result.ingredient.map(x => `- ${x.toString()}`).join("\n");
 
-  const embed = {
-    embeds: [
-      new MessageEmbed()
-        .setColor(getCerealColor())
-        .setTitle(result.name)
-        .setDescription(result.category)
-        .setThumbnail(result.thumb_nail)
-        .addFields(
-          {
-            name: "Ingredients",
-            value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-          },
-          {
-            name: "Instructions",
-            value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
-          }
-        ),
-    ],
-  };
-  return embed;
+  return new MessageEmbed()
+    .setColor(getCerealColor())
+    .setTitle(result.name)
+    .setDescription(result.category)
+    .setThumbnail(result.thumb_nail)
+    .addFields(
+      {
+        name: "Ingredients",
+        value: trim(ingredients, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+      },
+      {
+        name: "Instructions",
+        value: trim(result.instructions, DISCORD.EMBED.FIELD_CHAR_LIMIT),
+      }
+    );
 };
 
 const dispatch = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => {
@@ -123,17 +118,25 @@ const dispatch = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => 
   let drink_url = baseUrl;
   if (args.length === 0) {
     drink_url += COCKTAIL.RANDOM_URL;
-  } else if (args[0].length === 1) {
+  } else if (args[0].length === 1 && parseInt(args[0]) === NaN) {
     const search_for_letter: string = args[0];
     drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
+  } else if (parseInt(args[0]) !== NaN) {
+    let numOfDrinks = keepIntInRange(parseInt(args[0]), 1, 5);
+    drink_url += COCKTAIL.RANDOM_URL;
+    const embeds: MessageEmbed[] = [];
+    for (let drink = 0; drink < numOfDrinks; drink++) {
+      embeds.push(await mix_drink(drink_url));
+    }
+    return { embeds: embeds };
   } else {
     const search_for_drink: string = _.toLower(_.join(args, "_"));
     drink_url += `${COCKTAIL.SEARCH_URL}${search_for_drink}`;
   }
-  return mix_drink(drink_url);
+  return { embeds: [await mix_drink(drink_url)] };
 };
 
-const mix_drink = async (url: string): Promise<{ embeds: MessageEmbed[] }> => {
+const mix_drink = async (url: string): Promise<MessageEmbed> => {
   return await fetchDrinks(url).then(selectDrinkFromList).then(parseObjectToDrink).then(createDrinkEmbed);
 };
 

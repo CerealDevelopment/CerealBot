@@ -62,6 +62,22 @@ const trim = (str: string, max: number): string => {
   return _.truncate(str, { length: max });
 };
 
+/**
+ * Returns either the input number or the min or max value
+ * @param value The number to check
+ * @param min The minimal value
+ * @param max The maximum value
+ * @returns An integer in range between min and max
+ */
+const numberInRange = (value: number, min: number = 1, max: number = 10): number => {
+  if (min > max) {
+    throw new Error(`min is ${min} but needs to be smaller or equal max which is ${max}`);
+  }
+  let numberOfPosts = Math.max(value, min);
+  numberOfPosts = Math.min(numberOfPosts, max);
+  return numberOfPosts;
+};
+
 interface CommandInterface {
   name: string;
   description: string;
@@ -71,4 +87,12 @@ interface CommandInterface {
   execute(message: Message, args?: Array<string>);
 }
 
-export { findFilesWithEnding, getRandomNumber, getCommandMap, CommandInterface, getCerealColor, trim };
+export {
+  findFilesWithEnding,
+  getRandomNumber,
+  getCommandMap,
+  CommandInterface,
+  getCerealColor,
+  trim,
+  numberInRange as keepIntInRange,
+};

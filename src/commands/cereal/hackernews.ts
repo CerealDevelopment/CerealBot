@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import { HACKERNEWS as H, DISCORD } from "../../../config.json";
 import logger from "../../logging";
 import { HackerNews } from "../../models/hackerNews";
-import { getCerealColor, trim } from "../../utils";
+import { getCerealColor, trim, keepIntInRange } from "../../utils";
 
 const fetchHackerNews = async (url: string): Promise<Object> => {
   return await fetch(url, {}).then(response => response.json());
@@ -62,9 +62,7 @@ const parseArgs = (args: string[], min: number = 1, max: number = 10): number =>
       if (args.length === 1) {
         const parsedArg = parseInt(args[0]);
         if (_.isInteger(parsedArg)) {
-          numberOfPosts = Math.abs(parsedArg);
-          numberOfPosts = Math.max(numberOfPosts, min);
-          numberOfPosts = Math.min(numberOfPosts, max);
+          numberOfPosts = keepIntInRange(parsedArg, min, max);
         } else {
           throw new Error("Argument not parsable");
         }
