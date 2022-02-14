@@ -31,6 +31,8 @@ npm run docker-push
 npm run docker-run
 ```
 
+The repository used to store the Docker image is [here](https://github.com/CerealDevelopment/CerealBot/pkgs/container/cerealbot) on Github.
+
 ## Configuration
 
 Passwords and tokens are passed with environment variables. To connect the bot to Discord a `BOT_TOKEN` is required.
