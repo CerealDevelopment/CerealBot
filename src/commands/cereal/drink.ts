@@ -118,10 +118,10 @@ const dispatch = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => 
   let drink_url = baseUrl;
   if (args.length === 0) {
     drink_url += COCKTAIL.RANDOM_URL;
-  } else if (args[0].length === 1 && parseInt(args[0]) === NaN) {
+  } else if (args[0].length === 1 && !_.isInteger(args[0])) {
     const search_for_letter: string = args[0];
     drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
-  } else if (parseInt(args[0]) !== NaN) {
+  } else if (_.isInteger(args[0])) {
     let numOfDrinks = keepIntInRange(parseInt(args[0]), 1, 5);
     drink_url += COCKTAIL.RANDOM_URL;
     const embeds: MessageEmbed[] = [];
