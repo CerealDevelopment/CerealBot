@@ -7,7 +7,7 @@ import { Drink } from "../../models/drink";
 import { Ingredient } from "../../models/ingredient";
 import logger from "../../logging";
 
-const fetchDrinks = async (url: string): Promise<Object> => {
+const fetchDrinks = async (url: string): Promise<any> => {
   return await fetch(url, {}).then(response => response.json());
 };
 
@@ -17,9 +17,9 @@ const fetchDrinks = async (url: string): Promise<Object> => {
  * @param max_num - Maximum number of Ingredients
  * @returns A parsed array of Ingredients
  */
-const parseIngredientsFieldsList = (res: Object, max_num: number = 16): Ingredient[] => {
-  const nameOfIngredientsField: string = "strIngredient";
-  const nameOfMeasureField: string = "strMeasure";
+const parseIngredientsFieldsList = (res: any, max_num = 16): Ingredient[] => {
+  const nameOfIngredientsField = "strIngredient";
+  const nameOfMeasureField = "strMeasure";
 
   const ingredientList: Ingredient[] = [];
   for (let i = 1; i < max_num; i++) {
@@ -46,7 +46,7 @@ const parseIngredientsFieldsList = (res: Object, max_num: number = 16): Ingredie
  * @param string - The string of the measurements
  * @returns An array with the measurements
  */
-const parseMeasure = (string: String): [string | null, string | null, string | null] => {
+const parseMeasure = (string: string): [string | null, string | null, string | null] => {
   const result = string.split(" ");
   return [result[0] ?? null, result[1] ?? null, result[2] ?? null];
 };
@@ -56,9 +56,9 @@ const parseMeasure = (string: String): [string | null, string | null, string | n
  * @param res - Response with JSON array
  * @returns One drink JSON
  */
-const selectDrinkFromList = async (res: Object): Promise<Object> => {
+const selectDrinkFromList = async (res: any): Promise<any> => {
   if (!_.isUndefined(res)) {
-    const drink_list_res: Object[] = res["drinks"];
+    const drink_list_res: any[] = res["drinks"];
     if (!_.isEmpty(drink_list_res)) {
       if (drink_list_res.length === 1) {
         return drink_list_res[0];
@@ -78,7 +78,7 @@ const selectDrinkFromList = async (res: Object): Promise<Object> => {
  * @param drink_res - JSON object to parse
  * @returns The Drink object
  */
-const parseObjectToDrink = (drink_res: Object): Drink => {
+const parseObjectToDrink = (drink_res: any): Drink => {
   const id = drink_res["idDrink"];
   const name = drink_res["strDrink"];
   const category = drink_res["strCategory"];
@@ -122,7 +122,7 @@ const dispatch = async (args: string[]): Promise<{ embeds: MessageEmbed[] }> => 
     const search_for_letter: string = args[0];
     drink_url += `${COCKTAIL.SEARCH_LETTER_URL}${search_for_letter}`;
   } else if (_.isInteger(args[0])) {
-    let numOfDrinks = keepIntInRange(parseInt(args[0]), 1, 5);
+    const numOfDrinks = keepIntInRange(parseInt(args[0]), 1, 5);
     drink_url += COCKTAIL.RANDOM_URL;
     const embeds: MessageEmbed[] = [];
     for (let drink = 0; drink < numOfDrinks; drink++) {

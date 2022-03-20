@@ -28,7 +28,7 @@ const parseMemeResponseToArray = (result: JSON): Array<MemeResource> => {
     throw new Error("result must not be null.");
   }
   return _.flatMap(result["data"]["items"], (item: JSON) => {
-    let parsedMemeResources: Array<MemeResource> = [];
+    const parsedMemeResources: Array<MemeResource> = [];
     if (item["is_album"]) {
       item["images"].forEach((imageObject: JSON) => {
         if (isImgurJsonUsable(imageObject)) {

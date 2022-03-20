@@ -17,7 +17,8 @@
         "docker-push": "docker push ghcr.io/cerealdevelopment/cerealbot:latest",
         "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot ghcr.io/cerealdevelopment/cerealbot:latest",
         "knex": "./node_modules/.bin/knex --knexfile src/data/knexfiles.ts",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "eslint": "npx eslint . --ext .ts"
     },
     "repository": {
         "type": "git",
@@ -45,6 +46,7 @@
         "@keyv/sqlite": "^2.0.2",
         "@types/node-cron": "^2.0.3",
         "discord.js": "^13.1.0",
+        "eslint-config-prettier": "^8.3.0",
         "ffmpeg-static": "^4.4.0",
         "knex": "^0.95.6",
         "libsodium-wrappers": "^0.7.9",
@@ -67,11 +69,14 @@
         "@types/node": "^16.7.13",
         "@types/node-cron": "^2.0.3",
         "@types/node-fetch": "^2.5.10",
+        "@typescript-eslint/eslint-plugin": "^5.12.0",
+        "@typescript-eslint/parser": "^5.12.0",
+        "eslint": "^8.9.0",
         "fast-check": "^2.17.0",
+        "husky": "^7.0.0",
         "jest": "^26.6.3",
         "prettier": "2.2.1",
         "pretty-quick": "^3.1.0",
-        "typescript": "^4.2.2",
-        "husky": "^7.0.0"
+        "typescript": "^4.5.5"
     }
 }

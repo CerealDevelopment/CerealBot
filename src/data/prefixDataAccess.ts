@@ -2,7 +2,6 @@ import { Knex } from "knex";
 import knex from "./database";
 import { DISCORD } from "../../config.json";
 import logger from "../logging";
-import _ from "lodash";
 
 const guildTableName = "guild";
 const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
@@ -12,19 +11,18 @@ const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
  * @param guildId - The id of the guild
  * @param newPrefix - The new prefix
  * @param prefixMaxLength - The maximum length of the prefix
- * @returns - A promise, that writes to the database
  */
 const setPrefix = async (
   guildId: string,
   newPrefix: string,
   prefixMaxLength: number = maxPrefixLength
-): Promise<any> => {
+): Promise<void> => {
   if (newPrefix.length > prefixMaxLength)
     throw Error(
       `Prefix is too long. It should have at most a length of ${prefixMaxLength}, but has a length of ${newPrefix.length}`
     );
 
-  return knex(guildTableName)
+  knex(guildTableName)
     .insert({
       id: guildId,
       prefix: newPrefix,
@@ -48,9 +46,10 @@ const getPrefix = async (guildId: string): Promise<string> => {
     });
 };
 
-const getPrefixSetIfEmpty = async (guildId: string, newPrefix: string): Promise<any> => {
-  const res = await getPrefix(guildId).catch(_ => {
+const getPrefixSetIfEmpty = async (guildId: string, newPrefix: string): Promise<string> => {
+  const res = await getPrefix(guildId).catch(e => {
     logger.info(`Guild Prefix for '${guildId}' was not found.`);
+    logger.warn(e);
     setPrefix(guildId, newPrefix);
     return getPrefix(guildId);
   });
