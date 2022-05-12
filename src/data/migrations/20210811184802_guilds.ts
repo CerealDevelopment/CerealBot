@@ -8,3 +8,7 @@ import { createPrefixTable } from "../prefixDataAccess";
 export async function up(knex: Knex): Promise<void> {
   return createPrefixTable(knex);
 }
+
+/*eslint-disable */
+export async function down(knex: Knex): Promise<void> {}
+/*eslint-enable */

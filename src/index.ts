@@ -91,9 +91,7 @@ cron.schedule(MEME.SYNC_AT_MIDNIGHT, async () => {
 });
 
 client.on("message", async (message: Message) => {
-  const prefix: string = await getPrefixSetIfEmpty(message.guild.id, globalPrefix).catch(e => {
-    logger.error(e);
-  });
+  const prefix: string = await getPrefixSetIfEmpty(message.guild.id, globalPrefix);
 
   if (!message.content.startsWith(prefix) || message.author.bot) {
     if (_.isEqual(_.trim(message.content.toLocaleLowerCase()), "prefix")) {

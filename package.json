@@ -15,7 +15,7 @@
         "docker-pull": "docker ghcr.io/cerealdevelopment/cerealbot:latest",
         "docker-build": "npm run-script build && docker build --tag ghcr.io/cerealdevelopment/cerealbot:latest .",
         "docker-push": "docker push ghcr.io/cerealdevelopment/cerealbot:latest",
-        "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs -e BOT_TOKEN=$BOT_TOKEN --name cerealbot ghcr.io/cerealdevelopment/cerealbot:latest",
+        "docker-run": "docker run -d -v $(pwd)/config.json:/opt/cerealbot/config.json -v $(pwd)/data:/opt/cerealbot/data -v $(pwd)/logs:/opt/cerealbot/logs --name cerealbot ghcr.io/cerealdevelopment/cerealbot:latest",
         "knex": "./node_modules/.bin/knex --knexfile src/data/knexfiles.ts",
         "prepare": "husky install",
         "eslint": "npx eslint . --ext .ts"
@@ -55,7 +55,7 @@
         "node-fetch": "^2.6.1",
         "opusscript": "^0.0.8",
         "require": "^2.4.20",
-        "sqlite3": "^4.1.1",
+        "sqlite3": "^5.0.2",
         "winston": "^3.3.3"
     },
     "devDependencies": {
