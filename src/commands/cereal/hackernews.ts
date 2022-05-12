@@ -6,11 +6,11 @@ import logger from "../../logging";
 import { HackerNews } from "../../models/hackerNews";
 import { getCerealColor, trim, keepIntInRange } from "../../utils";
 
-const fetchHackerNews = async (url: string): Promise<Object> => {
+const fetchHackerNews = async (url: string): Promise<number[]> => {
   return await fetch(url, {}).then(response => response.json());
 };
 
-const checkValidResponseOfTopHackerNews = (res: Object): number[] => {
+const checkValidResponseOfTopHackerNews = (res: number[]): number[] => {
   if (_.isArrayLike(res)) {
     if (_.isInteger(res[0])) {
       return res as number[];
@@ -30,7 +30,7 @@ const takeTopPosts = (res: number[], numberOfPosts: number): number[] => {
  */
 const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
   const baseURL = H.BASE_URL;
-  let listOfNews = [];
+  const listOfNews = [];
   for (const i of stories) {
     const s = await fetchHackerNews(baseURL + H.STORY + i + H.URL_SUFFIX);
     const newsStory = new HackerNews(
@@ -54,7 +54,7 @@ const getNewsStories = async (stories: number[]): Promise<HackerNews[]> => {
  * @param args arguments of the command
  * @returns Parsed args to get the number of posts to create
  */
-const parseArgs = (args: string[], min: number = 1, max: number = 10): number => {
+const parseArgs = (args: string[], min = 1, max = 10): number => {
   let numberOfPosts = 5;
 
   if (args) {
@@ -74,6 +74,8 @@ const parseArgs = (args: string[], min: number = 1, max: number = 10): number =>
   return numberOfPosts;
 };
 
+type CreatePostFunction = (news: HackerNews[]) => any;
+
 /**
  * Get the news from Hackernews and return a function to create a properly formatted output
  * @param url URL of Hackernews
@@ -81,7 +83,11 @@ const parseArgs = (args: string[], min: number = 1, max: number = 10): number =>
  * @param createPosts A function to create a post
  * @returns A function that creates a post
  */
-const createNews = async (url: string, args: string[], createPosts: Function): Promise<{ embeds: MessageEmbed[] }> => {
+const createNews = async (
+  url: string,
+  args: string[],
+  createPosts: CreatePostFunction
+): Promise<{ embeds: MessageEmbed[] }> => {
   const response = await fetchHackerNews(url).then(checkValidResponseOfTopHackerNews);
   if (_.isError(response)) {
     return;

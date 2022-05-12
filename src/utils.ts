@@ -18,7 +18,7 @@ const findFilesWithEnding = (directory: string, endsWith: string): Array<string>
  * @param lastNumber - The last random number that was created.
  * @returns - A random number, that is different than the last number.
  */
-const getRandomNumber = (maxValue: number, lastNumber: number = 0): number => {
+const getRandomNumber = (maxValue: number, lastNumber = 0): number => {
   const newNumber = _.random(0, maxValue);
   if (newNumber === lastNumber) return getRandomNumber(maxValue, lastNumber);
   return newNumber;
@@ -42,7 +42,7 @@ const commandMap = (() => {
   for (const folder of commandFolders) {
     const commandFiles: Array<string> = findFilesWithEnding(`lib/commands/${folder}`, ".js");
     for (const file of commandFiles) {
-      const command = require(`./commands/${folder}/${file}`);
+      const command = require(`./commands/${folder}/${file}`); // eslint-disable-line @typescript-eslint/no-var-requires
       collection.set(command.name, command);
     }
   }
@@ -69,7 +69,7 @@ const trim = (str: string, max: number): string => {
  * @param max The maximum value
  * @returns An integer in range between min and max
  */
-const numberInRange = (value: number, min: number = 1, max: number = 10): number => {
+const numberInRange = (value: number, min = 1, max = 10): number => {
   if (min > max) {
     throw new Error(`min is ${min} but needs to be smaller or equal max which is ${max}`);
   }

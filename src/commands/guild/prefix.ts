@@ -3,15 +3,20 @@ import { Message } from "discord.js";
 import { getPrefix, setPrefix } from "../../data/prefixDataAccess";
 import { userPermissions } from "../../models/discordUserPermissions";
 import { DISCORD } from "../../../config.json";
+import _ from "lodash";
 
 const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
 
 const getGuildPrefix = async (guildId: string): Promise<string> => {
   const prefix: string | void = await getPrefix(guildId).catch(e => {
     logger.error(e);
-    return "not set :man_shrugging:";
+    return "Prefix is not set :man_shrugging:";
   });
-  return `Prefix is \`${prefix}\``;
+  if (_.isUndefined(prefix)) {
+    return "Prefix is not set :man_shrugging:";
+  } else {
+    return `Prefix is \`${prefix}\``;
+  }
 };
 
 const setGuildPrefix = async (guildId: string, newPrefix: string): Promise<string> => {

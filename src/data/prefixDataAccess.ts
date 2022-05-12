@@ -12,7 +12,6 @@ const maxPrefixLength = DISCORD.MAX_PREFIX_LENGTH;
  * @param guildId - The id of the guild
  * @param newPrefix - The new prefix
  * @param prefixMaxLength - The maximum length of the prefix
- * @returns - A promise, that writes to the database
  */
 const setPrefix = async (
   guildId: string,
@@ -43,14 +42,18 @@ const getPrefix = async (guildId: string): Promise<string> => {
     .where({ id: guildId })
     .first("prefix")
     .then(row => {
-      const { prefix } = row;
-      return prefix;
+      if (!_.isUndefined(row)) {
+        const { prefix } = row;
+        return prefix;
+      } else {
+        throw Error(`Guild Prefix for '${guildId}' was not found.`);
+      }
     });
 };
 
-const getPrefixSetIfEmpty = async (guildId: string, newPrefix: string): Promise<any> => {
-  const res = await getPrefix(guildId).catch(_ => {
-    logger.info(`Guild Prefix for '${guildId}' was not found.`);
+const getPrefixSetIfEmpty = async (guildId: string, newPrefix: string): Promise<string> => {
+  const res = await getPrefix(guildId).catch(e => {
+    logger.warn(e);
     setPrefix(guildId, newPrefix);
     return getPrefix(guildId);
   });

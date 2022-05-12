@@ -17,4 +17,6 @@ export async function up(knex: Knex): Promise<void> {
   });
 }
 
-export async function down(knex: Knex): Promise<void> {}
+/*eslint-disable */
+export async function down(knex: Knex): Promise<void> {} 
+/*eslint-enable */

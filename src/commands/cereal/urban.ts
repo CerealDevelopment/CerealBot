@@ -5,7 +5,7 @@ import { trim, getCerealColor } from "../../utils";
 import { URBAN, DISCORD } from "../../../config.json";
 import logger from "../../logging";
 
-interface Answer {
+interface AnswerInterface {
   word: string;
   permalink: string;
   definition: string;
@@ -24,20 +24,20 @@ const fetchUrban = async (url: string): Promise<any> => {
   return list;
 };
 
-const checkResponse = (list: any[]): Answer[] => {
+const checkResponse = (list: any[]): AnswerInterface[] => {
   if (list.length) {
-    return <Answer[]>list;
+    return <AnswerInterface[]>list;
   } else {
     throw new Error("Drink response is empty");
   }
 };
 
-const getFirstAnswer = (list: Answer[]): Answer => {
+const getFirstAnswer = (list: AnswerInterface[]): AnswerInterface => {
   const [answer] = list;
   return answer;
 };
 
-const buildEmbed = async (answer: Answer): Promise<{ embeds: MessageEmbed[] }> => {
+const buildEmbed = async (answer: AnswerInterface): Promise<{ embeds: MessageEmbed[] }> => {
   const embed = {
     embeds: [
       new MessageEmbed()

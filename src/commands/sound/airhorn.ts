@@ -18,10 +18,10 @@ import {
 
 const player = createAudioPlayer();
 
-const pathToAirhornFiles: string = "./resources/sounds/airhorns";
+const pathToAirhornFiles = "./resources/sounds/airhorns";
 
 const airhornFiles: Array<string> = findFilesWithEnding(pathToAirhornFiles, config.AUDIO_FILE_FORMAT);
-let lastIndexOfAudioFile: number = 0;
+let lastIndexOfAudioFile = 0;
 
 const possibleErrors = (msg: Message = null) => {
   let authorId = "";
@@ -51,7 +51,7 @@ const connectToChannel = async (channel: VoiceChannel) => {
     adapterCreator: createDiscordJSAdapter(channel),
   });
 
-  const timeout: number = 30000;
+  const timeout = 30000;
   try {
     await entersState(connection, VoiceConnectionStatus.Ready, timeout);
     return connection;
@@ -70,7 +70,11 @@ const removeAllWhiteSpacesAndToLower = (str: string): string => {
   return _.replace(_.lowerCase(str), /(\s+)/g, "");
 };
 
-const audioFileNames: Object = _.reduce(
+interface AirhornListInterface {
+  [index: string]: string;
+}
+
+const audioFileNames: AirhornListInterface = _.reduce(
   airhornFiles,
   (result, value) => {
     const key = removeAllWhiteSpacesAndToLower(_.replace(value, /(airhorn_)|(.ogg)/gi, ""));
@@ -134,12 +138,12 @@ const checkUserInChannel = (message: Message) => {
 const playSpecificAudioFile = async (
   message: Message,
   pathToAudioFiles: string,
-  audioFileNames: Object,
+  audioFileNames: AirhornListInterface,
   args: string[]
 ): Promise<void> => {
   const choice: string = removeAllWhiteSpacesAndToLower(_.join(args, "_"));
   const audioFile: string = _.get(audioFileNames, choice, "airhorn_default.ogg");
-  const chosenFile: string = `${pathToAudioFiles}/${audioFile}`;
+  const chosenFile = `${pathToAudioFiles}/${audioFile}`;
 
   return playAudio(message, chosenFile);
 };
@@ -149,7 +153,7 @@ const playSpecificAudioFile = async (
  * @param message - Message from Discord
  * @param audioFileNames - A Object containing all files with names
  */
-const printAirhornHelp = async (message: Message, audioFileNames: Object) => {
+const printAirhornHelp = async (message: Message, audioFileNames: AirhornListInterface) => {
   const helpText = "A selection of our finest Airhorns:```";
   const names = _.keysIn(audioFileNames);
   const reply =
@@ -181,7 +185,7 @@ const playRandomAirhorn = async (
   lastIndexOfAudioFile: number
 ): Promise<number> => {
   const chooseFileNumber: number = getRandomNumber(audioFiles.length - 1, lastIndexOfAudioFile);
-  const chosenFile: string = `${pathToAudioFiles}/${audioFiles[chooseFileNumber]}`;
+  const chosenFile = `${pathToAudioFiles}/${audioFiles[chooseFileNumber]}`;
 
   await playAudio(message, chosenFile);
   return chooseFileNumber;
